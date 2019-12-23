@@ -1,0 +1,146 @@
+/********************************************************************************************************
+ * @file     app.c 
+ *
+ * @brief    This is the source file for TLSR8258
+ *
+ * @author	 junwei.lu@telink-semi.com;
+ * @date     May 8, 2018
+ *
+ * @par      Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd.
+ *           All rights reserved.
+ *
+ *           The information contained herein is confidential property of Telink
+ *           Semiconductor (Shanghai) Co., Ltd. and is available under the terms
+ *           of Commercial License Agreement between Telink Semiconductor (Shanghai)
+ *           Co., Ltd. and the licensee or the terms described here-in. This heading
+ *           MUST NOT be removed from this file.
+ *
+ *           Licensees are granted free, non-transferable use of the information in this
+ *           file under Mutual Non-Disclosure Agreement. NO WARRENTY of ANY KIND is provided.
+ * @par      History:
+ * 			 1.initial release(DEC. 26 2018)
+ *
+ * @version  A001
+ *
+ *******************************************************************************************************/
+#include "app_config.h"
+
+
+#define FLASH_ADDR				0x020000
+#define FLASH_BUFF_LEN			256
+
+volatile unsigned char Flash_Read_Buff[FLASH_BUFF_LEN]={0};
+volatile unsigned char Flash_Write_Buff[FLASH_BUFF_LEN]=
+{		0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
+		0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
+		0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,
+		0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,
+		0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,
+		0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,
+		0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,
+		0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,
+
+
+		0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
+		0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
+		0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,
+		0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,
+		0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,
+		0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,
+		0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,
+		0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,
+
+		0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
+		0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
+		0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,
+		0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,
+		0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,
+		0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,
+		0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,
+		0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,
+
+		0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
+		0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
+		0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,
+		0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,
+		0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,
+		0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,
+		0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,
+		0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,
+};
+
+volatile unsigned char status;
+unsigned char mid_buf[4]={0};
+unsigned char uid_buf[16]={0};
+
+void user_init()
+{
+	//1.init the LED pin,for indication
+	gpio_set_func(LED1 ,AS_GPIO);
+	gpio_set_output_en(LED1, 1); //enable output
+	gpio_set_input_en(LED1 ,0);//disable input
+	gpio_write(LED1, 0);              //LED On
+#if(FLASH_MODE==FLASH_PAGE_READ)
+
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
+
+#elif(FLASH_MODE==FLASH_PAGE_WRITE)
+
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
+
+#elif(FLASH_MODE==FLASH_PAGE_ERASE)
+
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_erase_page(FLASH_ADDR);
+
+#elif(FLASH_MODE==FLASH_SECTOR_ERASE)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0x0f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_erase_sector(FLASH_ADDR);
+
+#elif(FLASH_MODE==FLASH_32KBLOCK_ERASE)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0x7f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_erase_32kblock(FLASH_ADDR);
+
+#elif(FLASH_MODE==FLASH_64KBLOCK_ERASE)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0xff00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_erase_64kblock(FLASH_ADDR);
+
+#elif(FLASH_MODE==FLASH_CHIP_ERASE)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(0x7fff00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_erase_chip();
+
+#elif(FLASH_MODE==FLASH_DEEP_POWER_DOWN)
+	flash_deep_powerdown();
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
+
+#elif(FLASH_MODE==FLASH_RELEASE_DEEP_POWER_DOWN)
+	flash_deep_powerdown();
+	flash_release_deep_powerdown();
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
+
+#elif(FLASH_MODE==FLASH_STATUS_READ)
+
+	status = flash_read_status();
+
+#elif(FLASH_MODE==FLASH_STATUS_WRITE)
+	status = flash_write_status(0x04);
+#elif(FLASH_MODE==FLASH_UID_READ)
+	flash_read_mid(mid_buf);
+	flash_read_uid(FLASH_READ_UID_CMD,uid_buf);
+#endif
+}
+
+
+void main_loop (void)
+{
+	gpio_toggle(LED1);
+	delay_ms(100);
+}
+
+
+
