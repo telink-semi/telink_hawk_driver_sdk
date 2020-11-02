@@ -37,22 +37,22 @@ typedef enum {
 	GPIO_GROUPD  = 0x300,
 	GPIO_GROUPE  = 0x400,
 
-    GPIO_PA0  = GPIO_GROUPA | BIT(0),	GPIO_PWM0A0  = GPIO_PA0,	GPIO_PWM3A0   = GPIO_PA0,
-    GPIO_PA1  = GPIO_GROUPA | BIT(1),	GPIO_PWM3NA1 = GPIO_PA1, 	GPIO_UCTSA1   = GPIO_PA1,
+    GPIO_PA0  = GPIO_GROUPA | BIT(0),	GPIO_PWM0A0  = GPIO_PA0,
+    GPIO_PA1  = GPIO_GROUPA | BIT(1),	GPIO_UCTSA1   = GPIO_PA1,
     GPIO_PA2  = GPIO_GROUPA | BIT(2), 	GPIO_PWM1NA2 = GPIO_PA2,	GPIO_URTSA2   = GPIO_PA2,
-    GPIO_PA3  = GPIO_GROUPA | BIT(3), 	GPIO_PWM4A3  = GPIO_PA3,  	GPIO_UTXA3    = GPIO_PA3,	GPIO_I2C_MCKA3 = GPIO_PA3,	GPIO_SPI_CKA3 = GPIO_PA3,
+    GPIO_PA3  = GPIO_GROUPA | BIT(3), 	GPIO_UTXA3    = GPIO_PA3,	GPIO_I2C_MCKA3 = GPIO_PA3,	GPIO_SPI_CKA3 = GPIO_PA3,
     GPIO_PA4  = GPIO_GROUPA | BIT(4), 	GPIO_PWM2A4  = GPIO_PA4,  	GPIO_URXA4    = GPIO_PA4,	GPIO_I2C_MSDA4 = GPIO_PA4,	GPIO_SPI_CKA4 = GPIO_PA4,
-    GPIO_PA5  = GPIO_GROUPA | BIT(5), 	GPIO_PWM5A5  = GPIO_PA5,  	GPIO_I2C_CKA5 = GPIO_PA5,	GPIO_I2C_MCKA5 = GPIO_PA5,
-    GPIO_PA6  = GPIO_GROUPA | BIT(6), 	GPIO_PWM4NA6 = GPIO_PA6,	GPIO_I2C_SDA6 = GPIO_PA6,	GPIO_I2C_MSDA6 = GPIO_PA6,	GPIO_CE_LNAA6 = GPIO_PA6,
-    GPIO_PA7  = GPIO_GROUPA | BIT(7), 	GPIO_PWM5A7  = GPIO_PA7,	GPIO_CE_PAA7  = GPIO_PA7,
+    GPIO_PA5  = GPIO_GROUPA | BIT(5), 	GPIO_I2C_CKA5 = GPIO_PA5,	GPIO_I2C_MCKA5 = GPIO_PA5,
+    GPIO_PA6  = GPIO_GROUPA | BIT(6), 	GPIO_I2C_SDA6 = GPIO_PA6,	GPIO_I2C_MSDA6 = GPIO_PA6,	GPIO_CE_LNAA6 = GPIO_PA6,
+    GPIO_PA7  = GPIO_GROUPA | BIT(7), 	GPIO_CE_PAA7  = GPIO_PA7,
     GPIOA_ALL = GPIO_GROUPA | 0x00ff,
 
-    GPIO_PB0  = GPIO_GROUPB | BIT(0), 	GPIO_PWM3B0  = GPIO_PB0,   	GPIO_SPI_MCNB0 = GPIO_PB0,	GPIO_CE_LNAB0  = GPIO_PB0,
+    GPIO_PB0  = GPIO_GROUPB | BIT(0), 	GPIO_SPI_MCNB0 = GPIO_PB0,	GPIO_CE_LNAB0  = GPIO_PB0,
     GPIO_PB1  = GPIO_GROUPB | BIT(1), 	GPIO_PWM1B1  = GPIO_PB1,	GPIO_SPI_MDOB1 = GPIO_PB1,	GPIO_CE_PAB1   = GPIO_PB1,	GPIO_PGAB1 = GPIO_PB1,
     GPIO_PB2  = GPIO_GROUPB | BIT(2), 	GPIO_PWM2B2  = GPIO_PB2,   	GPIO_SPI_MDIB2 = GPIO_PB2,  GPIO_UCTSB2    = GPIO_PB2,	GPIO_I2C_MCKB2 = GPIO_PB2, GPIO_PGAB2 = GPIO_PB2,
     GPIO_PB3  = GPIO_GROUPB | BIT(3), 	GPIO_PWM0B3  = GPIO_PB3,  	GPIO_SPI_MCKB3 = GPIO_PB3,	GPIO_URTSB3    = GPIO_PB3,	GPIO_I2C_MSDB3 = GPIO_PB3,
     GPIO_PB4  = GPIO_GROUPB | BIT(4), 	GPIO_PWM1NB4 = GPIO_PB4,    GPIO_UTXB4     = GPIO_PB4,	GPIO_PGAB4     = GPIO_PB4,
-    GPIO_PB5  = GPIO_GROUPB | BIT(5),   GPIO_PWM4B5  = GPIO_PB5,  	GPIO_URXB5     = GPIO_PB5,	GPIO_PGAB5     = GPIO_PB5,
+    GPIO_PB5  = GPIO_GROUPB | BIT(5),   GPIO_URXB5     = GPIO_PB5,	GPIO_PGAB5     = GPIO_PB5,
     GPIO_PB6  = GPIO_GROUPB | BIT(6), 	GPIO_PWM0NB6 = GPIO_PB6,    GPIO_I2C_MCKB6 = GPIO_PB6,	GPIO_URTSB6    = GPIO_PB6,
     GPIO_PB7  = GPIO_GROUPB | BIT(7), 	GPIO_PWM1B7  = GPIO_PB7,  	GPIO_I2C_MSDB7 = GPIO_PB7,  GPIO_UCTSB7    = GPIO_PB7,
     GPIOB_ALL = GPIO_GROUPB | 0x00ff,
@@ -60,11 +60,11 @@ typedef enum {
 
     GPIO_PC1  = GPIO_GROUPC | BIT(1),	GPIO_PWM2NC1 = GPIO_PC1,
     GPIO_PC2  = GPIO_GROUPC | BIT(2),	GPIO_PWM0NC2 = GPIO_PC2,	GPIO_SPI_CNC2 = GPIO_PC2,	GPIO_SPI_MCNC2 = GPIO_PC2,	GPIO_UCTSC2 = GPIO_PC2,
-    GPIO_PC3  = GPIO_GROUPC | BIT(3),	GPIO_PWM5NC3 = GPIO_PC3,	GPIO_SPI_DOC3 = GPIO_PC3,	GPIO_SPI_MDOC3 = GPIO_PC3,	GPIO_URTSC3 = GPIO_PC3,
+    GPIO_PC3  = GPIO_GROUPC | BIT(3),	GPIO_SPI_DOC3 = GPIO_PC3,	GPIO_SPI_MDOC3 = GPIO_PC3,	GPIO_URTSC3 = GPIO_PC3,
     GPIO_PC4  = GPIO_GROUPC | BIT(4),	GPIO_SPI_DIC4 = GPIO_PC4,	GPIO_I2C_MSDC4 = GPIO_PC4,	GPIO_SPI_MDIC4 = GPIO_PC4,	GPIO_UTXC4 = GPIO_PC4,
     GPIO_PC5  = GPIO_GROUPC | BIT(5),	GPIO_SPI_CKC5 = GPIO_PC5,  GPIO_I2C_MCKC5 = GPIO_PC5,	GPIO_SPI_MCKC5 = GPIO_PC5,	GPIO_URXC5 = GPIO_PC5,
-    GPIO_PC6  = GPIO_GROUPC | BIT(6),	GPIO_PWM4C6 = GPIO_PC6,
-    GPIO_PC7  = GPIO_GROUPC | BIT(7),	GPIO_SWS = GPIO_PC7,		GPIO_PWM3C7 = GPIO_PC7,
+    GPIO_PC6  = GPIO_GROUPC | BIT(6),
+    GPIO_PC7  = GPIO_GROUPC | BIT(7),	GPIO_SWS = GPIO_PC7,
     GPIOC_ALL = GPIO_GROUPC | 0x00ff,
 
     GPIO_PE0  = GPIO_GROUPE | BIT(0),
@@ -104,15 +104,11 @@ typedef enum{
     AS_PWM0 	= 20,
     AS_PWM1		= 21,
     AS_PWM2 	= 22,
-    AS_PWM3		= 23,
-    AS_PWM4 	= 24,
-    AS_PWM5		= 25,
+
     AS_PWM0_N	= 26,
     AS_PWM1_N	= 27,
     AS_PWM2_N	= 28,
-    AS_PWM3_N	= 29,
-    AS_PWM4_N	= 30,
-    AS_PWM5_N   = 31,
+
 
     AS_32K_CLK_OUTPUT   = 32,
     AS_RESERVE_0   = 33,
@@ -181,12 +177,23 @@ typedef enum {
  * @param[in]  none.
  * @return     none.
  */
+/**Processing methods of unused GPIO
+ * Set it to high resistance state and set it to open pull-up or pull-down resistance to
+ * let it be in the determined state.When GPIO uses internal pull-up or pull-down resistance,
+ * do not use pull-up or pull-down resistance on the board in the process of practical
+ * application because it may have the risk of electric leakage .
+ */
 void gpio_init(void);
 /**
  * @brief      This function servers to set the GPIO's function.
  * @param[in]  pin - the special pin.
  * @param[in]  func - the function of GPIO.
  * @return     none.
+ */
+/**Steps to set GPIO as a multiplexing function is as follows.
+ * Step 1: Set GPIO as a multiplexing function.
+ * Step 2: Disable GPIO function.
+ * NOTE: Failure to follow the above steps may result in risks.
  */
 void gpio_set_func(GPIO_PinTypeDef pin, GPIO_FuncTypeDef func);
 
@@ -311,14 +318,15 @@ static inline void gpio_set_interrupt(GPIO_PinTypeDef pin, GPIO_PolTypeDef falli
 {
 	unsigned char bit = pin & 0xff;
 	BM_SET(reg_gpio_irq_wakeup_en(pin), bit);
-	reg_irq_mask |= FLD_IRQ_GPIO_EN ;
 	reg_gpio_wakeup_irq |= FLD_GPIO_CORE_INTERRUPT_EN;
 	if(falling){
 		BM_SET(reg_gpio_pol(pin), bit);
 	}else{
 		BM_CLR(reg_gpio_pol(pin), bit);
 	}
-
+/*clear gpio interrupt source (after setting gpio polarity,before enable interrupt)to avoid unexpected interrupt. confirm by minghai*/
+	reg_irq_src |= FLD_IRQ_GPIO_EN|FLD_IRQ_GPIO_RISC0_EN|FLD_IRQ_GPIO_RISC1_EN|FLD_IRQ_GPIO_RISC2_EN;
+	reg_irq_mask |= FLD_IRQ_GPIO_EN ;
 }
 
 /**
@@ -331,12 +339,14 @@ static inline void gpio_set_interrupt_risc0(GPIO_PinTypeDef pin, GPIO_PolTypeDef
 {
 	unsigned char bit = pin & 0xff;
 	BM_SET(reg_gpio_irq_risc0_en(pin), bit);
-	reg_irq_mask |= FLD_IRQ_GPIO_RISC0_EN;
 	if(falling){
 		BM_SET(reg_gpio_pol(pin), bit);
 	}else{
 		BM_CLR(reg_gpio_pol(pin), bit);
 	}
+/*clear gpio interrupt sorce (after setting gpio polarity,before enable interrupt)to avoid unexpected interrupt. confirm by minghai*/
+	reg_irq_src |= FLD_IRQ_GPIO_EN|FLD_IRQ_GPIO_RISC0_EN|FLD_IRQ_GPIO_RISC1_EN|FLD_IRQ_GPIO_RISC2_EN;
+	reg_irq_mask |= FLD_IRQ_GPIO_RISC0_EN;
 }
 
 /**
@@ -349,12 +359,14 @@ static inline void gpio_set_interrupt_risc1(GPIO_PinTypeDef pin, GPIO_PolTypeDef
 {
 	unsigned char bit = pin & 0xff;
 	BM_SET(reg_gpio_irq_risc1_en(pin), bit);
-	reg_irq_mask |= FLD_IRQ_GPIO_RISC1_EN;
 	if(falling){
 		BM_SET(reg_gpio_pol(pin), bit);
 	}else{
 		BM_CLR(reg_gpio_pol(pin), bit);
 	}
+/*clear gpio interrupt sorce (after setting gpio polarity,before enable interrupt)to avoid unexpected interrupt. confirm by minghai*/
+	reg_irq_src |= FLD_IRQ_GPIO_EN|FLD_IRQ_GPIO_RISC0_EN|FLD_IRQ_GPIO_RISC1_EN|FLD_IRQ_GPIO_RISC2_EN;
+	reg_irq_mask |= FLD_IRQ_GPIO_RISC1_EN;
 }
 
 /**
@@ -367,12 +379,14 @@ static inline void gpio_set_interrupt_risc2(GPIO_PinTypeDef pin, GPIO_PolTypeDef
 {
 	unsigned char bit = pin & 0xff;
 	BM_SET(reg_gpio_irq_risc2_en(pin), bit);
-	reg_irq_mask |= FLD_IRQ_GPIO_RISC2_EN;
 	if(falling){
 		BM_SET(reg_gpio_pol(pin), bit);
 	}else{
 		BM_CLR(reg_gpio_pol(pin), bit);
 	}
+/*clear gpio interrupt sorce (after setting gpio polarity,before enable interrupt)to avoid unexpected interrupt. confirm by minghai*/
+	reg_irq_src |= FLD_IRQ_GPIO_EN|FLD_IRQ_GPIO_RISC0_EN|FLD_IRQ_GPIO_RISC1_EN|FLD_IRQ_GPIO_RISC2_EN;
+	reg_irq_mask |= FLD_IRQ_GPIO_RISC1_EN;
 }
 
 #endif //GPIO_H

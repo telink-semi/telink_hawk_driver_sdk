@@ -33,12 +33,24 @@ void user_init()
 	gpio_set_output_en(LED1, 1); 		//enable output
 	gpio_set_input_en(LED1 ,0);			//disable input
 	gpio_write(LED1, 0);              	//LED On
-
+	/*test*/
+	gpio_set_func(LED2 ,AS_GPIO);
+	gpio_set_output_en(LED2, 1); 		//enable output
+	gpio_set_input_en(LED2 ,0);			//disable input
+	gpio_write(LED2, 0);              	//LED On
+	gpio_set_func(LED3 ,AS_GPIO);
+	gpio_set_output_en(LED3, 1); 		//enable output
+	gpio_set_input_en(LED3 ,0);			//disable input
+	gpio_write(LED3, 0);              	//LED On
+	gpio_set_func(LED4,AS_GPIO);
+	gpio_set_output_en(LED4, 1); 		//enable output
+	gpio_set_input_en(LED4 ,0);			//disable input
+	gpio_write(LED4, 0);              	//LED On
 	//2.init the SW1 pin,for trigger interrupt
 #if (GPIO_MODE == GPIO_IRQ )
 	gpio_set_func(SW1 ,AS_GPIO);
-	gpio_set_output_en(SW1, 0); 			//enable output
-	gpio_set_input_en(SW1 ,1);				//disable input
+	gpio_set_output_en(SW1, 0); 			//disable output
+	gpio_set_input_en(SW1 ,1);				//enable input
 	gpio_set_up_down_resistor(SW1, PM_PIN_PULLUP_10K);
 	gpio_set_interrupt(SW1, POL_FALLING);
 #elif(GPIO_MODE == GPIO_IRQ_RSIC0)
@@ -73,7 +85,17 @@ void main_loop (void)
 {
 #if(GPIO_MODE == GPIO_TOGGLE)
 	gpio_toggle(LED1);
-	delay_ms(200);
+	delay_ms(1000);
+	gpio_toggle(LED1);
+	gpio_toggle(LED2);
+	delay_ms(1000);
+	gpio_toggle(LED2);
+	gpio_toggle(LED4);
+	delay_ms(1000);
+	gpio_toggle(LED4);
+	gpio_toggle(LED3);
+	delay_ms(1000);
+	gpio_toggle(LED3);
 #endif
 }
 

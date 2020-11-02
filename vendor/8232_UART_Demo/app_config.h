@@ -41,7 +41,7 @@ extern "C" {
 #define UART_DMA  		1     //uart use dma
 #define UART_NDMA  		2     //uart not use dma
 
-#define UART_MODE		1
+#define UART_MODE		2
 
 #define NORMAL	   		1
 #define USE_CTS    		2

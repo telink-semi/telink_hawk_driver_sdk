@@ -27,8 +27,8 @@
 
 #if(PWM_MODE==PWM_IR_DMA_FIFO)
 /*********************************************************************************
-    PWM0   :  PA2.  PC1.  PC2.	PD5
-    PWM0_N :  PA0.  PB3.  PC4	PD5
+	PWM0   :  PA0.  PB3
+	PWM0_N :  PB6	PC2
  *********************************************************************************/
 
 #define PWM_PIN					GPIO_PA0
@@ -44,11 +44,50 @@
 #define IR_DMA_SHADOW_CMP_TICK			(IR_DMA_SHADOW_MAX_TICK/2)
 
 unsigned short IR_DMA_Buff[64]={0};
+unsigned short IRQ_IR_DMA_Buff[20]={0};
+
+unsigned int ir_dma_fifo_cnt=0;
+/**
+ * @brief		This function serves to handle the interrupt of MCU
+ * @param[in] 	none
+ * @return 		none
+ */
+_attribute_ram_code_ void irq_handler(void)
+{
+
+	if(pwm_get_irq_status(PWM0_IR_DMA_FIFO_DONE_IRQ))
+	{
+		pwm_clr_irq_status(PWM0_IR_DMA_FIFO_DONE_IRQ);
+		ir_dma_fifo_cnt++;
+		gpio_toggle(LED3);
+		unsigned char irq_index=2;
+		IRQ_IR_DMA_Buff[irq_index++]= pwm_ir_dma_fifo_set_waveform(1, PWM0_PULSE_NORMAL, 9000 * CLOCK_SYS_CLOCK_1US/IR_DMA_MAX_TICK);
+		IRQ_IR_DMA_Buff[irq_index++]= pwm_ir_dma_fifo_set_waveform(1, PWM0_PULSE_NORMAL, 4500 * CLOCK_SYS_CLOCK_1US/IR_DMA_MAX_TICK);
+
+		unsigned int irq_length = (irq_index-2)*2;
+		unsigned char* irq_buff = &IRQ_IR_DMA_Buff[0];
+		irq_buff[0]= irq_length&0xff;
+		irq_buff[1]= (irq_length>>8)&0xff;
+		irq_buff[2]= (irq_length>>16)&0xff;
+		irq_buff[3]= (irq_length>>24)&0xff;
+		pwm_set_dma_addr(&IRQ_IR_DMA_Buff);
+		pwm_ir_dma_fifo_start_tx();
+
+}
+
+
+
+
 
 void user_init()
 {
 	delay_ms(2000);
-
+	gpio_set_func(LED1 ,AS_GPIO);
+	gpio_set_output_en(LED1, 1);
+	gpio_set_func(LED2 ,AS_GPIO);
+	gpio_set_output_en(LED2, 1);
+	gpio_set_func(LED3 ,AS_GPIO);
+	gpio_set_output_en(LED3, 1);
 	pwm_set_clk(CLOCK_SYS_CLOCK_HZ, CLOCK_SYS_CLOCK_HZ);
 
 	gpio_set_func(PWM_PIN, AS_PWMx);
@@ -72,7 +111,7 @@ void user_init()
 	IR_DMA_Buff[index++]= pwm_ir_dma_fifo_set_waveform(0, PWM0_PULSE_SHADOW, 1690 * CLOCK_SYS_CLOCK_1US/IR_DMA_SHADOW_MAX_TICK);
 	IR_DMA_Buff[index++]= pwm_ir_dma_fifo_set_waveform(1, PWM0_PULSE_SHADOW, 560 * CLOCK_SYS_CLOCK_1US/IR_DMA_SHADOW_MAX_TICK);
 
-	unsigned int length = index*2;
+	unsigned int length = (index-2)*2;
 	unsigned char* buff = &IR_DMA_Buff[0];
 	buff[0]= length&0xff;
 	buff[1]= (length>>8)&0xff;
@@ -81,16 +120,16 @@ void user_init()
 	pwm_set_dma_addr(&IR_DMA_Buff);
 
 	//enable pwm0 ir dma fifo done irq
-	reg_irq_mask |= FLD_IRQ_SW_PWM_EN;
-	reg_pwm_irq_mask |= FLD_IRQ_PWM0_IR_DMA_FIFO_DONE;
+	pwm_set_irq_en(PWM0_IR_DMA_FIFO_DONE_IRQ,1);
+	irq_set_mask(FLD_IRQ_SW_PWM_EN);
 	irq_enable();
-
 	pwm_ir_dma_fifo_start_tx();
 }
 
 void main_loop (void)
 {
 	delay_ms(50);
+	gpio_toggle(LED2);
 }
 
 #endif

@@ -44,9 +44,9 @@ _attribute_ram_code_ void irq_handler(void)
  * @param[in]	none
  * @return      none
  */
-void main (void) {
+int main (void) {
 
-	system_init();
+	system_init(BSP_INTERNAL_CAP_ENABLE);
 
 	clock_init(SYS_CLK);
 
@@ -59,5 +59,7 @@ void main (void) {
 	while (1) {
 		main_loop ();
 	}
+
+	return 0;
 }
 

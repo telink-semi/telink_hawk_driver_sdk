@@ -27,26 +27,46 @@
 
 #if(PWM_MODE==PWM_COUNT)
 /*********************************************************************************
-    PWM0   :  PA2.  PC1.  PC2.	PD5
-    PWM0_N :  PA0.  PB3.  PC4	PD5
+	PWM0   :  PA0.  PB3
+	PWM0_N :  PB6	PC2
  *********************************************************************************/
-
 #define PWM_PIN			GPIO_PA0
 #define AS_PWMx			AS_PWM0
 #define PWM_ID			PWM0
 #define PWM_PULSE_NUM	3
 
+_attribute_ram_code_ void irq_handler(void)
+{
+
+   if(pwm_get_irq_status(PWM0_PNUM_IRQ))
+   {
+	 pwm_clr_irq_status(PWM0_PNUM_IRQ);
+
+	 gpio_toggle(LED3);
+   }
+}
+
 void user_init()
 {
-	delay_ms(2000);
-
+	//delay_ms(2000);
+	gpio_set_func(LED1 ,AS_GPIO);
+	gpio_set_output_en(LED1, 1);
+	gpio_set_func(LED2 ,AS_GPIO);
+	gpio_set_output_en(LED2, 1);
+	gpio_set_func(LED3 ,AS_GPIO);
+	gpio_set_output_en(LED3, 1);
 	pwm_set_clk(CLOCK_SYS_CLOCK_HZ, CLOCK_SYS_CLOCK_HZ);
 
 	gpio_set_func(PWM_PIN, AS_PWMx);
 	pwm_set_mode(PWM_ID, PWM_COUNT_MODE);
 	pwm_set_pulse_num(PWM_ID,PWM_PULSE_NUM);
-	pwm_set_max_and_cmp(PWM_ID, 2,1);
+	pwm_set_max_and_cmp(PWM_ID, 2*CLOCK_SYS_CLOCK_1MS,1*CLOCK_SYS_CLOCK_1MS);
+
+	pwm_set_irq_en(PWM0_PNUM_IRQ,1);
+	irq_set_mask(FLD_IRQ_SW_PWM_EN);
+	irq_enable();
 	pwm_start(PWM_ID);
+
 }
 
 void main_loop (void)

@@ -342,6 +342,7 @@ enum{
 	FLD_UART_RBCNT 	     =  BIT_RNG(0,2),
 	FLD_UART_IRQ_FLAG    =  BIT(3),
 	FLD_UART_WBCNT 	     =  BIT_RNG(4,6),
+	FLD_UART_CLEAR_RX_FLAG 	=  BIT(6),
 	FLD_UART_RX_ERR_FLAG =  BIT(7),
 };
 
@@ -961,24 +962,17 @@ enum{
 };
 
 #define reg_pwm0_pulse_num				REG_ADDR16(0x7ac)
-#define reg_pwm_irq_mask				REG_ADDR8(0x7b0)
-#define reg_pwm_irq_sta					REG_ADDR8(0x7b1)
-typedef enum{
+#define reg_pwm_irq_mask(i)				REG_ADDR8(0x7b0+i*2)
+#define reg_pwm_irq_sta(i)				REG_ADDR8(0x7b1+i*2)
+enum{
 	FLD_IRQ_PWM0_PNUM =					BIT(0),
 	FLD_IRQ_PWM0_IR_DMA_FIFO_DONE  =	BIT(1),
 	FLD_IRQ_PWM0_FRAME =				BIT(2),
 	FLD_IRQ_PWM1_FRAME =				BIT(3),
 	FLD_IRQ_PWM2_FRAME =				BIT(4),
+	FLD_IRQ_PWM0_IR_FIFO =              BIT(16),
 };
-#define reg_pwm0_fifo_mode_irq_mask		REG_ADDR8(0x7b2)
-enum{
-	FLD_IRQ_PWM0_IR_FIFO_EN  	 = BIT(0),
-};
-#define reg_pwm0_fifo_mode_irq_sta		REG_ADDR8(0x7b3)
 
-enum{
-	FLD_IRQ_PWM0_IR_FIFO_CNT 	 = BIT(0),
-};
 
 #define reg_pwm_tcmp0_shadow			REG_ADDR16(0x7c4)
 #define reg_pwm_tmax0_shadow			REG_ADDR16(0x7c6)

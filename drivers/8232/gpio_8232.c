@@ -1,9 +1,15 @@
 #include "gpio.h"
-
+#include "analog.h"
 /**
  * @brief      This function servers to initialization all gpio.
  * @param[in]  none.
  * @return     none.
+ */
+/**Processing methods of unused GPIO
+ * Set it to high resistance state and set it to open pull-up or pull-down resistance to
+ * let it be in the determined state.When GPIO uses internal pull-up or pull-down resistance,
+ * do not use pull-up or pull-down resistance on the board in the process of practical
+ * application because it may have the risk of electric leakage .
  */
  void gpio_init(void)
  {
@@ -92,15 +98,14 @@
   * @param[in]  func - the function of GPIO.
   * @return     none.
   */
+ /**Steps to set GPIO as a multiplexing function is as follows.
+  * Step 1: Set GPIO as a multiplexing function.
+  * Step 2: Disable GPIO function.
+  * NOTE: Failure to follow the above steps may result in risks.
+  */
  void gpio_set_func(GPIO_PinTypeDef pin, GPIO_FuncTypeDef func)
  {
  	unsigned char	bit = pin & 0xff;
- 	if(func == AS_GPIO){
- 		BM_SET(reg_gpio_gpio_func(pin), bit);
- 		return;
- 	}else{
- 		BM_CLR(reg_gpio_gpio_func(pin), bit);
- 	}
  	unsigned char val = 0;
  		unsigned char mask = 0xff;
  		switch(pin)
@@ -109,24 +114,18 @@
  			{
  				//0x5a8[1:0]
  				//0. PWM0
- 				//1. PWM3
  				mask = (unsigned char)~(BIT(1)|BIT(0));
  				if(func == AS_PWM0){
 
- 				}else if(func == AS_PWM3){
- 					val = BIT(0);
  				}
  			}
  			break;
  			case GPIO_PA1:
  			{
  				//0x5a8[3:2]
- 				//0. PWM_3N
  				//1. UART_CTS
  				mask= (unsigned char)~(BIT(3)|BIT(2));
- 				if(func == AS_PWM3_N){
-
- 				}else if(func == AS_UART_CTS){
+ 				if(func == AS_UART_CTS){
  					val = BIT(2);
  				}
  			}
@@ -149,14 +148,11 @@
  			case GPIO_PA3:
  			{
  				//0x5a8[7:6]
- 				//0. PWM4
  				//1. UART_TX
  				//2. I2C_MCK (i2c master)
  				//3. DI(spi slave)/I2C_SD(i2c slave)
  				mask= (unsigned char)~(BIT(7)|BIT(6));
- 				if(func == AS_PWM4){
-
- 				}else if(func == AS_UART_TX){
+ 				if(func == AS_UART_TX){
  					val = BIT(6);
  				}else if(func == AS_I2C_MCK){
  					val = BIT(7);
@@ -192,14 +188,11 @@
  			case GPIO_PA5:
  			{
  				//0x5a9[3:2]
- 				//0. PWM5
  				//1. I2C_CK  (i2c slave)
  				//2.
  				//3. I2C_MCK (i2c master )
  				mask= (unsigned char)~(BIT(3)|BIT(2));
- 				if(func == AS_PWM5){
-
- 				}else if(func == AS_I2C_CK){
+ 				if(func == AS_I2C_CK){
  					val = BIT(2);
  				}else if(func == AS_I2C_MCK){
  					val = BIT(2)| BIT(3);
@@ -209,14 +202,11 @@
  			case GPIO_PA6:
  			{
  				//0x5a9[5:4]
- 				//0. AS_PWM4_N
  				//1. I2C_SD (i2c salve)
  				//2. RX_CYC2LNA
  				//3. I2C_MSD(i2c master)
  				mask= (unsigned char)~(BIT(5)|BIT(4));
- 				if(func == AS_PWM4_N){
-
- 				}else if(func == AS_I2C_SD){
+ 				if(func == AS_I2C_SD){
  					val = BIT(4);
  				}else if(func == AS_I2C_MSD){
  					val =  BIT(4)|BIT(5);
@@ -227,24 +217,18 @@
  			case GPIO_PA7:
  			{
  				//0x5a9[7:6]
- 				//0. PWM5
  				mask = (unsigned char)~(BIT(7)|BIT(6));
- 				if(func == AS_PWM5){
 
- 				}
  			}
  			break;
 
  			case GPIO_PB0:
  			{
  				//0x5aa[1:0]
- 				//0. PWM3
  				//1. MCN
  				//2. RX_CYC2LNA
  				mask = (unsigned char)~(BIT(1)|BIT(0));
- 				if(func == AS_PWM3){
-
- 				}else if(func == AS_SPI_MCN ){
+ 				if(func == AS_SPI_MCN ){
 
  					val = BIT(0);
  				}
@@ -330,13 +314,10 @@
  			case GPIO_PB5:
  			{
  				//0x5ab[3:2]
- 				//0. PWM4
  				//1.
  				//2. UART_RX
  				mask = (unsigned char)~(BIT(3)|BIT(2));
- 				if(func == AS_PWM4){
-
- 				}else if(func == AS_UART_RX){
+ 				if(func == AS_UART_RX){
  					val = BIT(3);
  				}
  			}
@@ -418,13 +399,11 @@
  			{
  				//0x5ac[7:6]
  				//0. DO (spi slave)
- 				//1. PWM5_N
  				//2. MDO(spi master)
  				//3. UART_RTS
  				mask = (unsigned char)~(BIT(7)|BIT(6));
  				 if(func ==  AS_SPI_DO){
- 				 }else if(func == AS_PWM5_N){
- 					val = BIT(6);
+
  				 }else if(func == AS_SPI_MDO){
  					val = BIT(7);
  				}
@@ -480,12 +459,9 @@
  			case GPIO_PC6:
  			{
  				//0x5ad[5:4]
- 				//0. PWM4
 
  				mask = (unsigned char)~(BIT(5)|BIT(4));
- 				if(func ==AS_PWM4 ){
 
- 				}
  			}
  			break;
 
@@ -494,13 +470,9 @@
  			{
  				//0x5ad[7:6]
  				//0. SWS_IO
- 				//1. PWM3
  				mask = (unsigned char)~(BIT(7)|BIT(6));
  				if(func == AS_SWS ){
 
- 				}
- 				else if(func == AS_PWM3){
- 					val = BIT(6);
  				}
  			}
  			break;
@@ -509,6 +481,13 @@
  		}
  		unsigned short reg = 0x5a8 + ((pin>>8)<<1) + ((pin&0x0f0) ? 1 : 0 );
  		WRITE_REG8(reg, ( READ_REG8(reg) & mask) | val);
+
+ 		if(func == AS_GPIO){
+ 			BM_SET(reg_gpio_gpio_func(pin), bit);
+ 		 	return;
+ 		}else{
+ 		 		BM_CLR(reg_gpio_gpio_func(pin), bit);
+ 			 }
  }
 
 /**

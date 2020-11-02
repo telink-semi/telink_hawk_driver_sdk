@@ -35,7 +35,7 @@ _attribute_ram_code_ void irq_handler(void)
 
 _attribute_ram_code_ int main (void)   //must on ramcode
 {
-	system_init();
+	system_init(BSP_INTERNAL_CAP_ENABLE);
 
 	clock_init(SYS_CLK);
 

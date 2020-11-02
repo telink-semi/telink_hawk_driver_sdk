@@ -29,8 +29,10 @@
 #include "bsp.h"
 #include "gpio.h"
 
+#define XTAL_EXCEPTION_FIX_EN              1
+
 #define PM_LONG_SLEEP_WAKEUP_EN			0		//if user need to make MCU sleep for a long time that is more than 268s, this macro need to be enabled and use "pm_long_sleep_wakeup" function
-#define CLK_32K_XTAL_EN					0       //if user take 32K xtal as 32k clock source, this macro need to be enabled
+
 #define PM_PAD_WAKEUP_16US_FILTER_EN	0
 /**
  * @brief analog register below can store infomation when MCU in deepsleep mode
@@ -72,6 +74,7 @@ typedef enum {
 
 typedef enum {
 	 PM_WAKEUP_PAD   = BIT(4),
+	 PM_WAKEUP_CORE  = BIT(5),
 	 PM_WAKEUP_TIMER = BIT(6),
 }SleepWakeupSrc_TypeDef;
 
@@ -81,8 +84,11 @@ typedef enum {
 
 enum {
 	 WAKEUP_STATUS_TIMER  			= BIT(1),
+	 PM_STATUS_CORE  	        	= BIT(2),
 	 WAKEUP_STATUS_PAD    			= BIT(3),
 	 STATUS_GPIO_ERR_NO_ENTER_PM  	= BIT(7),
+
+	 STATUS_ENTER_SUSPEND			= BIT(30),
 };
 
 /**
@@ -115,6 +121,29 @@ void mcu_stall_wakeup_by_timer1(unsigned int tick);
  * @return  none.
  */
 void mcu_stall_wakeup_by_timer2(unsigned int tick);
+
+/**
+ * @brief   This function serves to get the 32k tick.
+ * @param   none
+ * @return  variable of 32k tick.
+ */
+_attribute_ram_code_ unsigned int pm_get_32k_tick (void);
+
+/**
+ * @brief   This function serves to set the 32k tick.
+ * @param   variable of 32k tick.
+ * @return  none.
+ */
+_attribute_ram_code_ void pm_set_32k_tick (unsigned int tick);
+
+/***
+ * brief: this function can get the 32K count value in real time.
+ * pm_get_32k_tick has while(flag),if 32K crystal not vibration, it will stop in while(flag).
+ * but get_32k_tick not occur this situation.
+ */
+_attribute_ram_code_ unsigned int get_32k_xtal_tick(void);
+
+_attribute_ram_code_ unsigned int get_32k_xtal_set_value(void);
 
 /**
  * @brief      This function configures a GPIO pin as the wakeup pin.

@@ -57,7 +57,7 @@ typedef enum {
  */
 typedef enum{
 	UART_TX_PA3 = GPIO_PA3,
-	UART_TX_PB4 = GPIO_PB4,//?
+	UART_TX_PB4 = GPIO_PB4,
 	UART_TX_PC4 = GPIO_PC4,
 }UART_TxPinDef;
 
@@ -65,9 +65,9 @@ typedef enum{
  *  @brief  Define uart rx pin
  */
 typedef enum{
-	UART_RX_PA4 = GPIO_PA4,//OK
-	UART_RX_PB5 = GPIO_PB5,//Uncertain
-	UART_RX_PC5 = GPIO_PC5,//OK
+	UART_RX_PA4 = GPIO_PA4,
+	UART_RX_PB5 = GPIO_PB5,
+	UART_RX_PC5 = GPIO_PC5,
 
 }UART_RxPinDef;
 
@@ -96,9 +96,10 @@ typedef enum {
     UART_RTS_MODE_MANUAL,
 } UART_RTSModeTypeDef;
 
-
+extern unsigned char uart_TxIndex;
 /**
- * @brief     This function servers to indicate Tx state.
+ * @brief     This function serves to indicate Tx state. 
+ * 			  Before entering power-saving mode,you need to call this function in order to ensure that the data sent is completed
  * @param[in] none.
  * @return    the state of Tx 0:Tx done 1:not.
  */
@@ -106,7 +107,16 @@ static inline unsigned char uart_tx_is_busy(void)
 {
     return ( (reg_uart_status1 & FLD_UART_TX_DONE) ? 0 : 1) ;
 }
-
+/**
+ * @brief     This function is used to set the 'uart_TxIndex' to 0.
+ *			  After wakeup from power-saving mode, you must call this function before sending the data.
+ * @param[in] none.
+ * @return    none.
+ */
+static inline void uart_ndma_clear_tx_index(void)
+{
+    uart_TxIndex=0;
+}
 /**
  *	@brief	reset uart module
  *	@param	none
@@ -217,10 +227,18 @@ extern void uart_set_rts(unsigned char Enable, UART_RTSModeTypeDef Mode, unsigne
  *            0: no parity error
  */
 extern unsigned char uart_is_parity_error(void);
+
 /**
  * @brief     This function clears parity error status once when it occurs.
  * @param[in] none
  * @return    none
+ *
+ * Note:
+ *(1)DMA mode
+ * RX FIFO will also be cleared when parity error flag is cleared .
+ *(2)NON-DMA mode
+ * When parity error occurs, clear parity error flag after UART receives the data.
+ * Cycle the four registers (0x90 0x91 0x92 0x93) from register "0x90" to get data when UART receives the data next time.
  */
 extern void uart_clear_parity_error(void);
 

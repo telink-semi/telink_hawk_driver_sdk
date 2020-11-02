@@ -48,7 +48,7 @@ extern "C" {
 #define GPIO_TOGGLE				5
 #define GPIO_HIGH_RESISTOR		6
 	
-#define GPIO_MODE 				GPIO_IRQ
+#define GPIO_MODE 				GPIO_TOGGLE
 
 
 /////////////////// Clock  /////////////////////////////////

@@ -26,6 +26,8 @@
 #include "compiler.h"
 #include "register.h"
 
+
+
 #define _ASM_NOP_				asm("tnop")
 
 //  delay precisely
@@ -89,13 +91,20 @@ typedef enum{
 	CLK_32K_XTAL =1,
 }CLK_32K_TypeDef;
 
+extern CLK_32K_TypeDef g_clk_32k_src;
+
 /**
  * @brief       This function to select the system clock source.
  * @param[in]   SYS_CLK - the clock source of the system clock.
  * @return      none
  */
 void clock_init(SYS_CLK_TYPEDEF SYS_CLK);
-
+/**
+ * @brief       This function is to accelerate the oscillation process by using PWM
+ * @param[in]   none
+ * @return      none
+ */
+void pwm_kick_32k_pad(void);
 /**
  * @brief   This function serves to set 32k clock source.
  * @param   variable of 32k type.

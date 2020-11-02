@@ -118,20 +118,33 @@ void sub_wr(unsigned int addr, unsigned char value, unsigned char e, unsigned ch
 	target = (tmp1 << s) | tmp2;
 	WRITE_REG8(addr, target);
 }
+
+
 /**
  * @brief   This function serves to initialize the related analog registers
  *          to default values after MCU is waked up from deep sleep mode.
  * @param   none
  * @return  none
  */
+unsigned char internal_cap_flag;
 #if(BLE_SDK_EN)
 _attribute_ram_code_  void cpu_wakeup_init(void)
 #else
-_attribute_ram_code_ void system_init(void)    //must on ramcode
+_attribute_ram_code_ void system_init(Bsp_InternalCapDef cap_flag)    //must on ramcode
 #endif
 {
+	internal_cap_flag = cap_flag;
 	load_tbl_cmd (tbl_sys_init, sizeof (tbl_sys_init)/sizeof (Cmd_TblDef));
-	analog_write(0x81, 0xe8); // increase xtal current
+
+	analog_write(0x00, 0xe8);//increase XTAL DCDC
+	if(!internal_cap_flag)
+	{
+		analog_write(0x81, 0xe0); // set internal cap value
+	}
+	else
+	{
+		analog_write(0x81, 0xe8); // set internal cap value
+	}
 
     /* Open 24M XTAL. */
     analog_write(0x05, 0xca);
@@ -141,13 +154,23 @@ _attribute_ram_code_ void system_init(void)    //must on ramcode
 	reg_dma_chn_en = 0;
 	reg_dma_chn_irq_msk = 0;
 	/* Set 24M XTAL buffer and doubler. */
-	analog_write(0x80, 0x61); //Enable 24M clk buf
-	analog_write(0x81, 0xd4); //Enable 24M clk buf -> 0x4f
+	if(!internal_cap_flag)
+	{
+		analog_write(0x80, 0x21); //Enable 24M clk buf
+		analog_write(0x81, 0xc0); //Enable 24M clk buf -> 0x4f
+	}
+	else
+	{
+		analog_write(0x80, 0x61); //Enable 24M clk buf
+		analog_write(0x81, 0xd4); //Enable 24M clk buf -> 0x4f
+	}
+
 	analog_write(0x82, 0x5f); //Enable 48M doubler
 	/* 24M RC calibrate. */
 	rc_24m_cal();
+	rc_32k_cal();
 	/* initiate the value of 32k count */
-	WRITE_REG16(0x750, 8000); //set 32k 16cyle avoid err use in a very quick suspend/deepsleep
+	WRITE_REG16(0x748, 8000); //set 32k 16cyle avoid err use in a very quick suspend/deepsleep
 	/* System Timer enable. */
 	reg_sys_timer_ctrl |= FLD_SYSTEM_TICK_START;
 

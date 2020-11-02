@@ -45,7 +45,7 @@ void user_init()
 	//note: dma addr must be set first before any other uart initialization! (confirmed by sihui)
 	uart_set_recbuff( (unsigned short *)&rec_buff, sizeof(rec_buff));
 
-	uart_set_pin(UART_TX_PA3, UART_RX_PA4);// uart tx/rx pin set
+	uart_set_pin(UART_TX_PB4, UART_RX_PB5);// uart tx/rx pin set
 
 	uart_reset();  //will reset uart digital registers from 0x90 ~ 0x9f, so uart setting must set after this reset
 

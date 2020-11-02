@@ -330,11 +330,11 @@ unsigned char uart_ndma_get_irq(void)
  * @param[in] uartData - the data to be send.
  * @return    none
  */
+//use this index to cycle the four register of uart. this index should be reset to 0,when send data after system wakeup.
+unsigned char uart_TxIndex = 0;//fix by yi.bao/confirmed by congqing			
 void uart_ndma_send_byte(unsigned char uartData)
 {
 	int t;
-	static unsigned char uart_TxIndex = 0;
-
 	t = 0;
 	while( uart_tx_is_busy() && (t<0xfffff))
 	{
@@ -435,10 +435,17 @@ unsigned char uart_is_parity_error(void)
  * @brief     This function clears parity error status once when it occurs.
  * @param[in] none
  * @return    none
+ *
+ * Note:
+ *(1)DMA mode
+ * RX FIFO will also be cleared when parity error flag is cleared .
+ *(2)NON-DMA mode
+ * When parity error occurs, clear parity error flag after UART receives the data.
+ * Cycle the four registers (0x90 0x91 0x92 0x93) from register "0x90" to get data when UART receives the data next time.
  */
 void uart_clear_parity_error(void)
 {
-	reg_uart_status0|= FLD_UART_RX_ERR_FLAG; //write 1 to clear
+	reg_uart_status0|= FLD_UART_CLEAR_RX_FLAG; //write 1 to clear
 }
 
 

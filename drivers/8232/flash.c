@@ -366,3 +366,47 @@ _attribute_ram_code_ void flash_read_uid(unsigned char idcmd,unsigned char *buf)
 	mspi_high();
 	irq_restore(r);
 }
+/**
+ * @brief 		 This function serves to read flash mid and uid,and check the correctness of mid and uid.
+ * @param[out]   flash_mid - Flash Manufacturer ID
+ * @param[out]   flash_uid - Flash Unique ID
+ * @return       0:error 1:ok
+ */
+_attribute_ram_code_ int flash_read_mid_uid_with_check( unsigned int *flash_mid ,unsigned char *flash_uid)
+{
+	 unsigned char no_uid[16]={0x51,0x01,0x51,0x01,0x51,0x01,0x51,0x01,0x51,0x01,0x51,0x01,0x51,0x01,0x51,0x01};
+	 int i,f_cnt=0;
+	 unsigned int mid;
+	 flash_read_mid((unsigned char*)&mid);
+	 mid = mid&0xffff;
+	 *flash_mid  = mid;
+	 /*
+		   Flash Type    CMD        MID      Company
+		   GD25LD40C 	 0x4b     0x60C8     GD
+		   GD25LD05C  	 0x4b 	  0x60C8     GD
+		   P25Q40L   	 0x4b     0x6085     PUYA
+		   MD25D40DGIG	 0x4b     0x4051     GD
+		   GD25D10C      0x4b     0x40C8     GD
+		   PN25F04C      0x5a     0x311C     XTX
+	*/
+	 if( (mid == 0x60C8) || (mid == 0x6085) ||(mid == 0x4051)||(mid==0x40C8)){
+		 flash_read_uid(FLASH_READ_UID_CMD,(unsigned char *)flash_uid);
+	 }
+	 else if(mid==0x311C){
+		 flash_read_uid(FLASH_READ_UID_CMD2,(unsigned char *)flash_uid);
+	 }
+	 else{
+		 return 0;
+	 }
+		  for(i=0;i<16;i++){
+			if(flash_uid[i]==no_uid[i]){
+				f_cnt++;
+			}
+		  }
+		  if(f_cnt==16){//no uid flash
+				  return 0;
+
+		  }else{
+			  return  1;
+		  }
+}

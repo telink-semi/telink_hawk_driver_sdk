@@ -65,6 +65,10 @@ _attribute_ram_code_ void irq_handler(void)
 		uart_dmairq_tx_cnt++;
 	}
 
+	if(uart_is_parity_error()){
+		uart_clear_parity_error();
+	}
+
 #elif(UART_MODE==UART_NDMA)
 	#if( FLOW_CTR == NORMAL)
 		static unsigned char uart_ndma_irqsrc;
@@ -98,7 +102,7 @@ _attribute_ram_code_ void irq_handler(void)
  */
 int main (void)   //must on ramcode
 {
-	system_init();
+	system_init(BSP_INTERNAL_CAP_ENABLE);
 
 	clock_init(SYS_CLK);
 

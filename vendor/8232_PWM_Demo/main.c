@@ -31,21 +31,6 @@ extern void main_loop (void);
 
 
 
-unsigned int ir_dma_fifo_cnt=0;
-/**
- * @brief		This function serves to handle the interrupt of MCU
- * @param[in] 	none
- * @return 		none
- */
-_attribute_ram_code_ void irq_handler(void)
-{
-#if (PWM_MODE==PWM_IR_DMA_FIFO)
-	if(reg_pwm_irq_sta & FLD_IRQ_PWM0_IR_DMA_FIFO_DONE){
-		reg_pwm_irq_sta |= FLD_IRQ_PWM0_IR_DMA_FIFO_DONE;
-		ir_dma_fifo_cnt++;
-	}
-#endif
-}
 
 /**
  * @brief		This is main function
@@ -54,13 +39,15 @@ _attribute_ram_code_ void irq_handler(void)
  */
 int main (void)
 {
-	system_init();
+	system_init(BSP_INTERNAL_CAP_ENABLE);
 
 	clock_init(SYS_CLK);
 
 //	rf_mode_init(RF_MODE_BLE_1M);
 
+
 	gpio_init();
+
 
 	user_init();
 

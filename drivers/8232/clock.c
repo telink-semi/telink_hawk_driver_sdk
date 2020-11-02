@@ -27,6 +27,8 @@
 #include "timer.h"
 
 
+CLK_32K_TypeDef g_clk_32k_src;
+
 /**
  * @brief       This function to select the system clock source.
  * @param[in]   SYS_CLK - the clock source of the system clock.
@@ -37,7 +39,51 @@ void clock_init(SYS_CLK_TYPEDEF SYS_CLK)
 	WRITE_REG8(0x70,READ_REG8(0x70)&0xfe);
 	WRITE_REG8(0x66,SYS_CLK);
 }
+/**
+ * @brief       This function is to accelerate the oscillation process by using PWM
+ * @param[in]   none
+ * @return      none
+ */
+void pwm_kick_32k_pad(void)
+{
+	unsigned char reg_66 = READ_REG8(0x66);
+	WRITE_REG8(0x66,0x43);
 
+	//1.set pb6, pb7 as pwm output
+	unsigned char reg_58e = READ_REG8(0x58e);
+	WRITE_REG8(0x58e,reg_58e&0x3f);
+	unsigned char reg_5ab = READ_REG8(0x5ab);
+	WRITE_REG8(0x5ab,reg_5ab&0x0f);
+	WRITE_REG8(0x781,0xf3);//pwm clk div
+
+	unsigned short reg_794 = READ_REG16(0x794);
+	WRITE_REG16(0x794,0x01);//pwm0's high time or low time
+	unsigned short reg_796 = READ_REG16(0x796);
+	WRITE_REG16(0x796,0x02);//pwm0's cycle time
+	WRITE_REG8(0x780,0x01);//enable pwm0
+	delay_ms(25);
+	unsigned short reg_798 = READ_REG16(0x798);
+	WRITE_REG16(0x798,0x01);//pwm1's high time or low time
+	unsigned short reg_79a = READ_REG16(0x79a);
+	WRITE_REG16(0x79a,0x02);//pwm1's cycle time
+	WRITE_REG8(0x780,0x03);//enable pwm1
+
+	//2.wait for pwm wake up xtal
+	delay_ms(25);
+	//3.recover pb6, pb7 as xtal pin
+	WRITE_REG8(0x780,0x02);
+	WRITE_REG16(0x794,reg_794);
+	WRITE_REG16(0x796,reg_796);
+	WRITE_REG8(0x780,0x00);
+	WRITE_REG16(0x798,reg_798);
+	WRITE_REG16(0x79a,reg_79a);
+
+	WRITE_REG8(0x781,0x00);
+	WRITE_REG8(0x66,reg_66);
+	WRITE_REG8(0x58a,READ_REG8(0x58a)|0xc0);
+	WRITE_REG8(0x58e,reg_58e|0xc0);
+
+}
 /**
  * @brief   This function serves to set 32k clock source.
  * @param[in]   variable of 32k type.
@@ -51,39 +97,13 @@ _attribute_ram_code_ void clock_32k_init (CLK_32K_TypeDef src)
 	if(src)
 	{
 		analog_write(0x05, power_32k|0x0);//power on 32K XTAL and 32K RC at the same time
-#if 1
-		//2.set pc3 as pwm output
-		unsigned char sys_clk = READ_REG8(0x66);
-		WRITE_REG8(0x66,0x43);
-		unsigned char reg_58e = READ_REG8(0x58e);
-		WRITE_REG8(0x58e,reg_58e&0x7f);
-		unsigned short reg_798 = READ_REG16(0x798);
-		WRITE_REG16(0x798,0x01);
-		unsigned short reg_79a = READ_REG16(0x79a);
-		WRITE_REG16(0x79a,0x02);
-		unsigned char reg_780 = READ_REG8(0x780);
-		WRITE_REG8(0x780,0x02);
-		unsigned char reg_781 = READ_REG8(0x781);
-		WRITE_REG8(0x781,0xf3);
-
-		//3.wait for PWM wake up Xtal
-		delay_ms(5);
-
-		//4.Xtal 32k output
-		analog_write(0x07,0x01); //<1:0>current select
-
-		//5.Recover PC3 as Xtal pin
-		WRITE_REG8(0x66,sys_clk);
-		WRITE_REG8(0x58e,reg_58e);
-		WRITE_REG16(0x798,reg_798);
-		WRITE_REG16(0x79a,reg_79a);
-		WRITE_REG8(0x780,reg_780);
-		WRITE_REG8(0x781,reg_781);
-#endif
+		pwm_kick_32k_pad();//PWM kick external 32k pad
+		g_clk_32k_src = CLK_32K_XTAL;
 	}
 	else
 	{
 		analog_write(0x05, power_32k|0x2);//power on 32K RC
+		g_clk_32k_src = CLK_32K_RC;
 	}
 }
 
@@ -94,16 +114,51 @@ _attribute_ram_code_ void clock_32k_init (CLK_32K_TypeDef src)
  */
 _attribute_ram_code_ void rc_24m_cal (void)
 {
-	sub_wr_ana(0x83, 3, 6, 4);	//wait len
-	sub_wr_ana(0x83, 0, 1, 1);	//sel calbr 24m
-	sub_wr_ana(0x02, 1, 4, 4);	//manual off
-	sub_wr_ana(0x83, 1, 0, 0);	//calbr en on
-	while((analog_read(0x84) & 0x01) == 0);	//wait done
-	unsigned char cap = analog_read(0x85);	//read 24m cap result
-	analog_write(0x30, cap);		//write 24m cap into manual register
-	sub_wr_ana(0x83, 0, 0, 0);	//calbr en off
-	sub_wr_ana(0x02, 0, 4, 4);	//manual on
+	unsigned char temp = 0;
 
+	/* Reset to default value */
+	analog_write(0x83,0x34);
+
+	/* cap from analog register */
+	temp = analog_read(0x02);
+	temp |= (1<<4);
+	analog_write(0x02,temp);
+
+	/*Disable 24M RC calibration.*/
+	temp = analog_read(0x83);
+	temp &= ~(1<<0);
+	temp &= ~(1<<1);
+	analog_write(0x83,temp);
+
+	for(volatile int i=0; i<100; i++);
+
+	/* Enable 24M RC calibration. */
+	temp = analog_read(0x83);
+	temp |= (1<<0);
+	analog_write(0x83,temp);
+
+	/* Wait Calibration completely. */
+	for(volatile int i=0; i<10000; i++)
+	{
+	   if((analog_read(0x84) & 0x01))
+	   {
+			unsigned char CalValue = 0;
+			CalValue = analog_read(0x85);
+			analog_write(0x30,CalValue);
+
+			break;
+	   }
+	}
+
+	/* Disable 24M RC calibration. */
+	temp = analog_read(0x83);
+	temp &= ~(1<<0);
+	analog_write(0x83,temp);
+
+	/* cap from pm_top */
+	temp = analog_read(0x02);
+	temp &= ~(1<<4);
+	analog_write(0x02,temp);
 }
 
 /**
@@ -113,15 +168,51 @@ _attribute_ram_code_ void rc_24m_cal (void)
  */
 _attribute_ram_code_ void rc_32k_cal (void)
 {
-	sub_wr_ana(0x83, 3, 6, 4);	//wait len
-	sub_wr_ana(0x83, 1, 1, 1);	//sel calbr 32k
-	sub_wr_ana(0x02, 1, 2, 2);	//manual off
-	sub_wr_ana(0x83, 1, 0, 0);	//calbr en on
-	while((analog_read(0x84) & 0x01) == 0);	//wait done
-	unsigned char cap = analog_read(0x85);	//read 32k cap result
-	analog_write(0x2f, cap);		//write 32k cap into manual register
-	sub_wr_ana(0x83, 0, 0, 0);	//calbr en off
-	sub_wr_ana(0x02, 0, 2, 2);	//manual on
+	unsigned char temp = 0;
+
+	/* Reset to default value */
+	analog_write(0x83,0x34);
+
+	/* cap from analog register */
+	temp = analog_read(0x02);
+	temp |= (1<<2);
+	analog_write(0x02, temp);
+
+	/* Disable 32K RC calibration. */
+	temp = analog_read(0x83);
+	temp &= ~(1<<0);//disable
+	temp |= (1<<1);//Select calibrate 32k RC
+	analog_write(0x83,temp);
+
+	for(volatile int i=0; i<100; i++);
+
+	/* Enable 32K RC calibration. */
+	temp = analog_read(0x83);
+	temp |= (1<<0);//Enable
+	analog_write(0x83,temp);
+
+	/* Wait Calibration completely. */
+	for(volatile int i=0; i<10000; i++)
+	{
+		if((analog_read(0x84) & 0x01))
+		{
+			unsigned char CalValue = 0;
+			CalValue = analog_read(0x85);
+			analog_write(0x2f,CalValue);
+
+			break;
+		}
+	}
+
+	/* Disable 32K RC calibration. */
+	temp = analog_read(0x83);
+	temp &= ~(1<<0);
+	analog_write(0x83,temp);
+
+	/* cap from pm_top */
+	temp = analog_read(0x02);
+	temp &= ~(1<<2);
+	analog_write(0x02, temp);
 }
 
 

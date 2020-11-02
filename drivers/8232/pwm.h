@@ -58,6 +58,8 @@ typedef enum{
 	PWM0_FRAME_IRQ =				BIT(2),
 	PWM1_FRAME_IRQ =				BIT(3),
 	PWM2_FRAME_IRQ =				BIT(4),
+	PWM0_IR_FIFO_DONE_IRQ =         BIT(16),
+
 }PWM_Irq_TypeDef;
 
 /**
@@ -211,9 +213,40 @@ static inline void pwm_set_pol(PWM_TypeDef id, int en){
  */
 static inline void pwm_set_irq_en(PWM_Irq_TypeDef irq, unsigned char en){
 	if(en){
-		BM_SET(reg_pwm_irq_mask, irq);
-	}else{
-		BM_CLR(reg_pwm_irq_mask, irq);
+		if(irq==PWM0_IR_FIFO_DONE_IRQ)
+		{
+		BM_SET(reg_pwm_irq_mask(1), BIT(0));
+		}
+		else
+		{
+		BM_SET(reg_pwm_irq_mask(0), irq);
+		}
+    }else{
+    	if(irq==PWM0_IR_FIFO_DONE_IRQ)
+    	{
+		   BM_CLR(reg_pwm_irq_mask(1),  BIT(0));
+    	}
+    	else
+    	{
+    	   BM_CLR(reg_pwm_irq_mask(0),  irq);
+    	}
+	}
+}
+
+
+/**
+ * @brief     This fuction servers to get  the pwm interrupt.
+ * @param[in] PWM_Irq_TypeDef - variable of enum to select the pwm interrupt source.
+ * @return	  none.
+ */
+static inline char pwm_get_irq_status(PWM_Irq_TypeDef irq){
+	if(irq==PWM0_IR_FIFO_DONE_IRQ)
+	{
+        return (reg_pwm_irq_sta(1)&BIT(0));
+	}
+	else
+	{
+		return (reg_pwm_irq_sta(0)&irq);
 	}
 }
 
@@ -224,7 +257,15 @@ static inline void pwm_set_irq_en(PWM_Irq_TypeDef irq, unsigned char en){
  * @return	  none.
  */
 static inline void pwm_clr_irq_status(PWM_Irq_TypeDef irq){
-	reg_pwm_irq_sta = irq;
+	if(irq==PWM0_IR_FIFO_DONE_IRQ)
+		{
+		reg_pwm_irq_sta(1) = BIT(0);
+		}
+		else
+		{
+			reg_pwm_irq_sta(0) = irq;
+		}
+
 }
 
 /**

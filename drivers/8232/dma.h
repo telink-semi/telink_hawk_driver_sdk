@@ -96,7 +96,7 @@ static inline unsigned char dma_get_irq_status(void)
  * @param[in]  size - select tx or rx irq. caution: max size = 2048
  * @return     none
  */
-static inline unsigned char dma_set_buff_size(DMA_chn_Typdef chn,unsigned int size)
+static inline void dma_set_buff_size(DMA_chn_Typdef chn,unsigned int size)
 {
 	reg_dma_size(chn) = (unsigned char)(size/16);
 }

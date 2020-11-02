@@ -3,6 +3,7 @@
 
 #include "bsp.h"
 #include "register.h"
+
 #define RF_CHN_AUTO_CAP 	0xff00
 #define RF_CHN_TABLE 		0x8000
 #define RF_SET_TX_MANAUL	0x4000
@@ -24,6 +25,17 @@ typedef enum {
     RF_MODE_AUTO=2
 } RF_StatusTypeDef;
 
+typedef enum {
+	RFFE_RX_PA6 = GPIO_PA6,
+    RFFE_RX_PB0 = GPIO_PB0,
+} RF_LNARxPinDef;
+
+//TX_CYC2PA;
+typedef enum {
+	RFFE_TX_PA7 = GPIO_PA7,
+    RFFE_TX_PB1 = GPIO_PB1,
+} RF_PATxPinDef;
+
 typedef enum{
 	RF_MODE_BLE_2M       	= BIT(0),
 	RF_MODE_BLE_1M       	= BIT(1),
@@ -35,28 +47,26 @@ typedef enum{
 }RF_ModeTypeDef;
 
 typedef enum {
-	RF_POWER_11P8dBm	= 0,
-	RF_POWER_9P6dBm		= 1,
-	RF_POWER_7P9dBm		= 2,
-	RF_POWER_7dBm		= 3,
-	RF_POWER_6P3dBm		= 4,
-	RF_POWER_4P9dBm		= 5,
-	RF_POWER_3P3dBm		= 6,
-	RF_POWER_1P6dBm		= 7,
-	RF_POWER_0dBm		= 8,
-	RF_POWER_m1P5dBm	= 9,
-	RF_POWER_m3P1dBm	= 10,
-	RF_POWER_m5dBm		= 11,
-	RF_POWER_m7P3dBm	= 12,
-	RF_POWER_m9P6dBm	= 13,
-	RF_POWER_m11P5dBm	= 14,
-	RF_POWER_m13P3dBm	= 15,
-	RF_POWER_m16dBm		= 16,
-	RF_POWER_m17P8dBm	= 17,
-	RF_POWER_m19P5dBm	= 18,
-	RF_POWER_OFF		= 19,
-}RF_PowerTypeDef;
 
+	RF_POWER_7P9dBm		= 0,
+	RF_POWER_7dBm		= 1,
+	RF_POWER_6P3dBm		= 2,
+	RF_POWER_4P9dBm		= 3,
+	RF_POWER_3P3dBm		= 4,
+	RF_POWER_1P6dBm		= 5,
+	RF_POWER_0dBm		= 6,
+	RF_POWER_m1P5dBm	= 7,
+	RF_POWER_m3P1dBm	= 8,
+	RF_POWER_m5dBm		= 9,
+	RF_POWER_m7P3dBm	= 10,
+	RF_POWER_m9P6dBm	= 11,
+	RF_POWER_m11P5dBm	= 12,
+	RF_POWER_m13P3dBm	= 13,
+	RF_POWER_m16dBm		= 14,
+	RF_POWER_m17P8dBm	= 15,
+	RF_POWER_m19P5dBm	= 16,
+	RF_POWER_OFF		= 17,
+}RF_PowerTypeDef;
 
 #define FR_TX_PA_MAX_POWER	0x40
 #define FR_TX_PA_MIN_POWER	0x41
@@ -73,8 +83,11 @@ typedef enum {
 #define	RF_PACKET_LENGTH_OK(p)		(p[0] == (p[13])+17)
 #define	RF_PACKET_CRC_OK(p)			((p[p[0]+3] & 0x51) == 0x40)
 
-#define	RF_BLE_PACKET_LENGTH_OK(p)	(p[0] == (p[13])+17)
-#define	RF_BLE_PACKET_CRC_OK(p)		((p[p[0]+3] & 0x51) == 0x40)
+#define	RF_BLE_PACKET_LENGTH_OK(p)	((256*p[1]+p[0]) == (p[13]+17))
+#define	RF_BLE_PACKET_CRC_OK(p)		((p[p[0]+p[1]*256+3] & 0x51) == 0x40)
+
+#define		RF_ZIGBEE_PACKET_LENGTH_OK(p)   (p[0] == p[12]+13)
+#define		RF_ZIGBEE_PACKET_CRC_OK(p)	    ((p[p[0]+3] & 0x51) == 0x10)
 
 #define	RF_NRF_ESB_PACKET_LENGTH_OK(p)		(p[0] == (p[12]&0x3f)+15)
 #define	RF_NRF_ESB_PACKET_CRC_OK(p)			((p[p[0]+3] & 0x51) == 0x40)
@@ -590,6 +603,8 @@ extern void rf_154_start_ed(void);
 *
 */
 extern unsigned char rf_154_stop_ed(void);
+
+extern void rf_rffe_set_pin(RF_PATxPinDef tx_pin, RF_LNARxPinDef rx_pin);
 
 #endif
 

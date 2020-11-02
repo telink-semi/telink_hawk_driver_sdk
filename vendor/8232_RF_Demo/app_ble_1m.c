@@ -57,8 +57,7 @@ void user_init()
 
 	rf_set_power_level_index (RF_POWER);
 	rf_set_tx_rx_off_auto();
-	rf_set_channel(RF_FREQ,0);
-
+	rf_ble_set_channel(RF_FREQ);
 	rf_set_acc_code(ACCESS_CODE);
 
 }
@@ -109,8 +108,7 @@ void user_init()
 
 	rf_set_power_level_index (RF_POWER);
 	rf_set_tx_rx_off();
-	rf_set_channel(RF_FREQ,0);
-
+	rf_ble_set_channel(RF_FREQ);
 	rf_set_acc_code(ACCESS_CODE);
 
 }

@@ -126,6 +126,14 @@ typedef struct TBLCMDSET {
 } Cmd_TblDef;
 
 /**
+ *   Table of whether using internal capacitor
+ */
+typedef enum {
+      BSP_INTERNAL_CAP_DISABLE = 0,
+      BSP_INTERNAL_CAP_ENABLE = 1,
+} Bsp_InternalCapDef;
+
+/**
  * @brief      This function performs a series of operations of writing digital or analog registers
  *             according to a command table
  * @param[in]  pt - pointer to a command table containing several writing commands
@@ -170,12 +178,12 @@ static inline void chip_reset(void)
  * @param   none
  * @return  none
  */
+extern unsigned char internal_cap_flag;
 #if(BLE_SDK_EN)
 extern void cpu_wakeup_init(void);
 #else
-extern void system_init(void);
+extern void system_init(Bsp_InternalCapDef cap_flag);
 #endif
-
 
 #endif /* BSP_H_ */
 
