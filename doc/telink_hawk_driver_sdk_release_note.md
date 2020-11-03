@@ -1,4 +1,5 @@
-﻿### Bug Fixes
+##V1.1.0
+### Bug Fixes
 
 * **pm:** 解决suspend唤后概率性出现的晶振不能起振或者起振后工作不正常的问题
 * **pm:** fix suspend crash issue(xtal work abnormal after wakeup)
