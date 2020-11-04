@@ -34,11 +34,8 @@
 
 
 ### BREAKING CHANGES
-* N/A
-
-标签（空格分隔）： 未分类
-
----
+* suspend唤醒后晶体概率性工作不正常，需要加手动kick等操作，需要各个SDK更新。
+* the crystal may work abnormal after suspend wake up,need add manual kick api etc.Need SDK update.
 
 在此输入正文
 
