@@ -1,35 +1,75 @@
 /********************************************************************************************************
- * @file     app.c 
+ * @file	app.c
  *
- * @brief    This is the source file for TLSR8258
+ * @brief	This is the source file for TLSR8232
  *
- * @author	 junwei.lu@telink-semi.com;
- * @date     May 8, 2018
+ * @author	Driver Group
+ * @date	May 8, 2018
  *
- * @par      Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd.
- *           All rights reserved.
+ * @par     Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd. ("TELINK")
+ *          All rights reserved.
  *
- *           The information contained herein is confidential property of Telink
- *           Semiconductor (Shanghai) Co., Ltd. and is available under the terms
- *           of Commercial License Agreement between Telink Semiconductor (Shanghai)
- *           Co., Ltd. and the licensee or the terms described here-in. This heading
- *           MUST NOT be removed from this file.
+ *          Redistribution and use in source and binary forms, with or without
+ *          modification, are permitted provided that the following conditions are met:
  *
- *           Licensees are granted free, non-transferable use of the information in this
- *           file under Mutual Non-Disclosure Agreement. NO WARRENTY of ANY KIND is provided.
- * @par      History:
- * 			 1.initial release(DEC. 26 2018)
+ *              1. Redistributions of source code must retain the above copyright
+ *              notice, this list of conditions and the following disclaimer.
  *
- * @version  A001
+ *              2. Unless for usage inside a TELINK integrated circuit, redistributions
+ *              in binary form must reproduce the above copyright notice, this list of
+ *              conditions and the following disclaimer in the documentation and/or other
+ *              materials provided with the distribution.
+ *
+ *              3. Neither the name of TELINK, nor the names of its contributors may be
+ *              used to endorse or promote products derived from this software without
+ *              specific prior written permission.
+ *
+ *              4. This software, with or without modification, must only be used with a
+ *              TELINK integrated circuit. All other usages are subject to written permission
+ *              from TELINK and different commercial license may apply.
+ *
+ *              5. Licensee shall be solely responsible for any claim to the extent arising out of or
+ *              relating to such deletion(s), modification(s) or alteration(s).
+ *
+ *          THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *          ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *          WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *          DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER BE LIABLE FOR ANY
+ *          DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *          (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *          LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *          ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *******************************************************************************************************/
 #include "app_config.h"
 
 
-#define FLASH_ADDR				0x020000
+#define FLASH_ADDR				0x010000
 #define FLASH_BUFF_LEN			256
 
-volatile unsigned char Flash_Read_Buff[FLASH_BUFF_LEN]={0};
+#define		MID1140C8		0        	// GD25D10C & GD25D10B
+#define		MID134051		1  			// MD25D40DGIG
+#define		MID12325E		2			// ZB25WD20A
+#define		MID13325E		3			// ZB25WD40B
+
+#define		FLASH_TYPE		MID13325E
+
+volatile unsigned char Flash_Read_Buff1[FLASH_BUFF_LEN]={0};
+volatile unsigned char Flash_Read_Buff2[FLASH_BUFF_LEN]={0};
+volatile unsigned char Flash_Read_Buff3[FLASH_BUFF_LEN]={0};
+volatile unsigned char Flash_Read_Buff4[FLASH_BUFF_LEN]={0};
+
+volatile unsigned char Flash_Read_Buff5[FLASH_BUFF_LEN]={0};
+volatile unsigned char Flash_Read_Buff6[FLASH_BUFF_LEN]={0};
+
+volatile unsigned char Flash_Read_Buff7[FLASH_BUFF_LEN]={0};
+
+volatile unsigned char OTP_Read_Buff1[FLASH_BUFF_LEN]={0};
+volatile unsigned char OTP_Read_Buff2[FLASH_BUFF_LEN]={0};
+volatile unsigned char OTP_Read_Buff3[FLASH_BUFF_LEN]={0};
+
 volatile unsigned char Flash_Write_Buff[FLASH_BUFF_LEN]=
 {		0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
 		0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
@@ -69,8 +109,9 @@ volatile unsigned char Flash_Write_Buff[FLASH_BUFF_LEN]=
 		0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,
 };
 
+volatile unsigned int check_umid;
 volatile unsigned char status;
-unsigned char mid_buf[4]={0};
+unsigned int mid_buf=0;
 unsigned char uid_buf[16]={0};
 
 void user_init()
@@ -80,59 +121,71 @@ void user_init()
 	gpio_set_output_en(LED1, 1); //enable output
 	gpio_set_input_en(LED1 ,0);//disable input
 	gpio_write(LED1, 0);              //LED On
-#if(FLASH_MODE==FLASH_PAGE_READ)
 
-	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
-
-#elif(FLASH_MODE==FLASH_PAGE_WRITE)
-
-	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
-
-#elif(FLASH_MODE==FLASH_PAGE_ERASE)
-
-	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_erase_page(FLASH_ADDR);
-
-#elif(FLASH_MODE==FLASH_SECTOR_ERASE)
 	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
 	flash_write_page(FLASH_ADDR+0x0f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff1);
+	flash_read_page(FLASH_ADDR+0x0f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff2);
+
+
 	flash_erase_sector(FLASH_ADDR);
 
-#elif(FLASH_MODE==FLASH_32KBLOCK_ERASE)
-	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_write_page(FLASH_ADDR+0x7f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_erase_32kblock(FLASH_ADDR);
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff3);
+	flash_read_page(FLASH_ADDR+0x0f00,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff4);
 
-#elif(FLASH_MODE==FLASH_64KBLOCK_ERASE)
-	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_write_page(FLASH_ADDR+0xff00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_erase_64kblock(FLASH_ADDR);
+#if(FLASH_TYPE == MID12325E)
+	flash_lock_mid12325e(FLASH_LOCK_LOW_128K_MID12325E);
+	status = flash_read_status_mid12325e();
 
-#elif(FLASH_MODE==FLASH_CHIP_ERASE)
-	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_write_page(0x7fff00,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
-	flash_erase_chip();
+#elif(FLASH_TYPE == MID134051)
+	flash_lock_mid134051(FLASH_LOCK_LOW_256K_MID134051);
+	status = flash_read_status_mid134051();
+#elif(FLASH_TYPE == MID1140C8)
+	flash_lock_mid1140c8(FLASH_LOCK_LOW_120K_MID1140C8);
+	status = flash_read_status_mid1140c8();
 
-#elif(FLASH_MODE==FLASH_DEEP_POWER_DOWN)
-	flash_deep_powerdown();
-	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
-
-#elif(FLASH_MODE==FLASH_RELEASE_DEEP_POWER_DOWN)
-	flash_deep_powerdown();
-	flash_release_deep_powerdown();
-	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff);
-
-#elif(FLASH_MODE==FLASH_STATUS_READ)
-
-	status = flash_read_status();
-
-#elif(FLASH_MODE==FLASH_STATUS_WRITE)
-	status = flash_write_status(0x04);
-#elif(FLASH_MODE==FLASH_UID_READ)
-	flash_read_mid(mid_buf);
-	flash_read_uid(FLASH_READ_UID_CMD,uid_buf);
+#elif(FLASH_TYPE == MID13325E)
+	flash_lock_mid13325e(FLASH_LOCK_LOW_256K_MID13325E);
+	status = flash_read_status_mid13325e();
 #endif
+
+#if(FLASH_TYPE == MID13325E) || (FLASH_TYPE == MID134051)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0x30000,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff5);
+	flash_read_page(FLASH_ADDR+0x30000,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff6);
+
+#elif(FLASH_TYPE == MID12325E)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0x10000,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff5);
+	flash_read_page(FLASH_ADDR+0x10000,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff6);
+#elif(FLASH_TYPE == MID1140C8)
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_write_page(FLASH_ADDR+0xe000,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff5);
+	flash_read_page(FLASH_ADDR+0xe000,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff6);
+#endif
+
+
+#if(FLASH_TYPE == MID12325E)
+	flash_unlock_mid12325e();
+#elif(FLASH_TYPE == MID134051)
+	flash_unlock_mid134051();
+#elif(FLASH_TYPE == MID1140C8)
+	flash_unlock_mid1140c8();
+#elif(FLASH_TYPE == MID13325E)
+	flash_unlock_mid13325e();
+#endif
+
+	flash_write_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Write_Buff);
+	flash_read_page(FLASH_ADDR,FLASH_BUFF_LEN,(unsigned char *)Flash_Read_Buff7);
+
+	check_umid = flash_read_mid_uid_with_check((unsigned int *)&mid_buf, uid_buf);
 }
 
 

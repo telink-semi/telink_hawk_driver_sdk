@@ -1,26 +1,46 @@
 /********************************************************************************************************
- * @file     app_ir_dma_fifo.c
+ * @file	app_ir_dma_fifo.c
  *
- * @brief    This is the source file for TLSR8258
+ * @brief	This is the source file for TLSR8232
  *
- * @author	 junyuan.zhang@telink-semi.com;junwei.lu@telink-semi.com
- * @date     May 8, 2018
+ * @author	Driver Group
+ * @date	May 8, 2018
  *
- * @par      Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd.
- *           All rights reserved.
+ * @par     Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd. ("TELINK")
+ *          All rights reserved.
  *
- *           The information contained herein is confidential property of Telink
- *           Semiconductor (Shanghai) Co., Ltd. and is available under the terms
- *           of Commercial License Agreement between Telink Semiconductor (Shanghai)
- *           Co., Ltd. and the licensee or the terms described here-in. This heading
- *           MUST NOT be removed from this file.
+ *          Redistribution and use in source and binary forms, with or without
+ *          modification, are permitted provided that the following conditions are met:
  *
- *           Licensees are granted free, non-transferable use of the information in this
- *           file under Mutual Non-Disclosure Agreement. NO WARRENTY of ANY KIND is provided.
- * @par      History:
- * 			 1.initial release(DEC. 26 2018)
+ *              1. Redistributions of source code must retain the above copyright
+ *              notice, this list of conditions and the following disclaimer.
  *
- * @version  A001
+ *              2. Unless for usage inside a TELINK integrated circuit, redistributions
+ *              in binary form must reproduce the above copyright notice, this list of
+ *              conditions and the following disclaimer in the documentation and/or other
+ *              materials provided with the distribution.
+ *
+ *              3. Neither the name of TELINK, nor the names of its contributors may be
+ *              used to endorse or promote products derived from this software without
+ *              specific prior written permission.
+ *
+ *              4. This software, with or without modification, must only be used with a
+ *              TELINK integrated circuit. All other usages are subject to written permission
+ *              from TELINK and different commercial license may apply.
+ *
+ *              5. Licensee shall be solely responsible for any claim to the extent arising out of or
+ *              relating to such deletion(s), modification(s) or alteration(s).
+ *
+ *          THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *          ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *          WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *          DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER BE LIABLE FOR ANY
+ *          DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *          (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *          LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *          ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *******************************************************************************************************/
 #include "app_config.h"
@@ -65,13 +85,14 @@ _attribute_ram_code_ void irq_handler(void)
 		IRQ_IR_DMA_Buff[irq_index++]= pwm_ir_dma_fifo_set_waveform(1, PWM0_PULSE_NORMAL, 4500 * CLOCK_SYS_CLOCK_1US/IR_DMA_MAX_TICK);
 
 		unsigned int irq_length = (irq_index-2)*2;
-		unsigned char* irq_buff = &IRQ_IR_DMA_Buff[0];
+		unsigned char* irq_buff = (unsigned char*)IRQ_IR_DMA_Buff;
 		irq_buff[0]= irq_length&0xff;
 		irq_buff[1]= (irq_length>>8)&0xff;
 		irq_buff[2]= (irq_length>>16)&0xff;
 		irq_buff[3]= (irq_length>>24)&0xff;
 		pwm_set_dma_addr(&IRQ_IR_DMA_Buff);
 		pwm_ir_dma_fifo_start_tx();
+	}
 
 }
 
@@ -112,7 +133,7 @@ void user_init()
 	IR_DMA_Buff[index++]= pwm_ir_dma_fifo_set_waveform(1, PWM0_PULSE_SHADOW, 560 * CLOCK_SYS_CLOCK_1US/IR_DMA_SHADOW_MAX_TICK);
 
 	unsigned int length = (index-2)*2;
-	unsigned char* buff = &IR_DMA_Buff[0];
+	unsigned char* buff = (unsigned char*)IR_DMA_Buff;
 	buff[0]= length&0xff;
 	buff[1]= (length>>8)&0xff;
 	buff[2]= (length>>16)&0xff;

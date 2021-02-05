@@ -1,6 +1,52 @@
 
+/********************************************************************************************************
+ * @file	cstartup_8232.S
+ *
+ * @brief	This is the boot file for TLSR8232
+ *
+ * @author	Driver Group
+ * @date	May 8, 2018
+ *
+ * @par     Copyright (c) 2018, Telink Semiconductor (Shanghai) Co., Ltd. ("TELINK")
+ *          All rights reserved.
+ *
+ *          Redistribution and use in source and binary forms, with or without
+ *          modification, are permitted provided that the following conditions are met:
+ *
+ *              1. Redistributions of source code must retain the above copyright
+ *              notice, this list of conditions and the following disclaimer.
+ *
+ *              2. Unless for usage inside a TELINK integrated circuit, redistributions
+ *              in binary form must reproduce the above copyright notice, this list of
+ *              conditions and the following disclaimer in the documentation and/or other
+ *              materials provided with the distribution.
+ *
+ *              3. Neither the name of TELINK, nor the names of its contributors may be
+ *              used to endorse or promote products derived from this software without
+ *              specific prior written permission.
+ *
+ *              4. This software, with or without modification, must only be used with a
+ *              TELINK integrated circuit. All other usages are subject to written permission
+ *              from TELINK and different commercial license may apply.
+ *
+ *              5. Licensee shall be solely responsible for any claim to the extent arising out of or
+ *              relating to such deletion(s), modification(s) or alteration(s).
+ *
+ *          THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *          ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *          WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *          DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER BE LIABLE FOR ANY
+ *          DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *          (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *          LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *          ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *******************************************************************************************************/
 
-#if  1
+#ifdef MCU_STARTUP_8232
+
 
 #ifndef __LOAD_RAM_SIZE__
 #define	__LOAD_RAM_SIZE__		0xc
@@ -20,6 +66,8 @@
 	.equ SVC_MODE, 		0x13	@ Supervisor mode 
 	.equ IRQ_STK_SIZE,	__IRQ_STK_SIZE__
 	.equ __LOAD_RAM, 	__LOAD_RAM_SIZE__
+	.equ __LOAD_FLASH, 	1
+	.equ __LOAD_DUT, 	0
 	
 @********************************************************************************************************
 @                                            TC32 EXCEPTION VECTORS
@@ -30,7 +78,8 @@
 	.global	 	__irq
 	.global 	__start
 	.global		__LOAD_RAM
-
+    .global		__LOAD_DUT
+	.global		__LOAD_FLASH
 __start:					@ MUST,  referenced by boot.link
 
 	.extern irq_handler
