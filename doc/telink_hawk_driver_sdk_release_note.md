@@ -1,5 +1,5 @@
-﻿### Version：V1.2.1
-* SDK version : telink_hawk_driver_sdk v1.2.1.
+﻿### Version：V1.3.0
+* SDK version : telink_hawk_driver_sdk v1.3.0.
 * This version sdk support hawk.
 
 ### Refactoring
@@ -20,7 +20,7 @@
 
 ### 版本
 
-* SDK版本: telink_hawk_driver_sdk v1.2.1。
+* SDK版本: telink_hawk_driver_sdk v1.3.0。
 * 此版本SDK支持hawk芯片。
 
 ### Refactoring
