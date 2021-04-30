@@ -58,7 +58,7 @@ unsigned int gpio_width =0;
  * @param[in] 	none
  * @return 		none
  */
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 #if(TIMER_MODE == TIMER_GPIO_TRIGGER_MODE)
 

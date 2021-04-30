@@ -55,7 +55,7 @@ volatile unsigned int gpio_irq_cnt;
  * @param[in] 	none
  * @return 		none
  */
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 #if (GPIO_MODE == GPIO_IRQ )
 

@@ -47,7 +47,11 @@
 
 #if (UART_MODE==UART_DMA)
 
-
+/**
+ * rec_buff_Len Set up rules:(Both conditions have to be met)
+ * 1.The rec_buff_Len value is a multiple of 16 	(16 * n)
+ * 2.The length of the receive data is less than (16 * n -4)
+ */
 
 #define rec_buff_Len    16
 #define trans_buff_Len  16

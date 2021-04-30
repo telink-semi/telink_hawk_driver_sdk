@@ -57,7 +57,7 @@
 #define PWM_PULSE_NUM1			5
 #define PWM_PULSE_NUM2			5
 #define PWM_PULSE_NUM3			10
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 
 	if(pwm_get_irq_status(PWM0_IR_FIFO_DONE_IRQ))

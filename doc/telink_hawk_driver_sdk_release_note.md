@@ -1,4 +1,43 @@
-﻿## V1.2.0
+﻿### Version：V1.2.1
+* SDK version : telink_hawk_driver_sdk v1.2.1.
+* This version sdk support hawk.
+
+### Refactoring
+
+* **uart**
+  * add restrictions for DMA receive length in UART-DMA mode.
+* **flash**
+  * In order to reduce the size of ram_code, the code structure of flash has been re-adjusted.
+
+### Note
+
+* **flash**
+  * Before calling the FLASH function, please check the power supply voltage of the chip. Only if the detected voltage is greater than the safe voltage value, the FLASH function can be called. Taking into account the factors such as power supply fluctuations, the safe voltage value needs to be greater than the minimum chip operating voltage. For the specific value, please make a reasonable setting according to the specific application and hardware circuit.
+  * Risk description: When the chip power supply voltage is relatively low, due to the unstable power supply, there may be a risk of error in the operation of the flash (especially for the write and erase operations. If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure).
+  * If you use the write protection & UID function, you need to update the program(because the chip has a new flash model number).
+
+<hr style="border-bottom:2.5px solid rgb(146, 240, 161)">
+
+### 版本
+
+* SDK版本: telink_hawk_driver_sdk v1.2.1。
+* 此版本SDK支持hawk芯片。
+
+### Refactoring
+
+* **uart**
+  * DEMO中增加DMA模式接收数据长度的说明。
+* **flash**
+  * 为了减少ram_code大小，重新调整了flash的代码结构。
+
+### Note
+
+* **flash**
+  * 在调用FLASH 函数前，请先做芯片供电电压检测，当检测电压大于安全电压值时，才可以调用FLASH 函数。考虑到电源波动等因素，安全电压值需要比最低芯片工作电压大，具体设置为多少，请根据具体应用以及硬件电路等因素进行合理的设置。
+  * 风险描述：当芯片供电电压比较低时，由于电源不稳定，flash的操作可能会有出错的风险（特别是写和擦操作，如果出现异常，可能会造成固件和用户数据被改写，从而导致最终产品失效）。
+  * 如果使用了写保护&UID功能，需要更新程序（因为芯片新增了flash型号）。
+
+## V1.2.0
 ### Bug Fixes
 * N/A
 

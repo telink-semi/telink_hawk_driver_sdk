@@ -475,7 +475,7 @@ void adc_set_all_ain_pre_scaler(ADC_PreScalingTypeDef v_scl)
 
 volatile signed short dat_buf[ADC_SAMPLE_NUM];
 
-_attribute_ram_code_ unsigned int adc_set_sample_and_get_result(void)
+_attribute_ram_code_sec_noinline_ unsigned int adc_set_sample_and_get_result(void)
 {
 	unsigned short temp;
 	//volatile signed int adc_dat_buf[ADC_SAMPLE_NUM];

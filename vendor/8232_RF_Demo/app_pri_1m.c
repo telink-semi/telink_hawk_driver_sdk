@@ -56,7 +56,7 @@
 
 #define ESB_MODE  			1
 #define SB_MODE   			2
-#define NORDIC_MODE			SB_MODE
+#define PRIVATE_MODE			SB_MODE
 
 #define RX_PAYLOAD_LEN		32
 
@@ -90,9 +90,9 @@ void user_init()
 
 	rf_set_acc_code(ACCESS_CODE);
 
-#if(NORDIC_MODE == ESB_MODE)
+#if(PRIVATE_MODE == ESB_MODE)
 
-#elif(NORDIC_MODE == SB_MODE)
+#elif(PRIVATE_MODE == SB_MODE)
 	rf_pri_set_shockburst_len(RX_PAYLOAD_LEN);
 #endif
 
@@ -104,9 +104,9 @@ void main_loop (void)
 	while(1)
 	{
 		delay_ms(1);
-	#if(NORDIC_MODE == ESB_MODE)
+	#if(PRIVATE_MODE == ESB_MODE)
 		rf_start_stx (Private_ESB_tx_packet, get_sys_tick() + 16*1000*TX_INTERVAL_MS);
-	#elif(NORDIC_MODE == SB_MODE)
+	#elif(PRIVATE_MODE == SB_MODE)
 		rf_start_stx (Private_SB_tx_packet, get_sys_tick() + 16*1000*TX_INTERVAL_MS);
 	#endif
 		while(!rf_is_tx_finish());
@@ -123,9 +123,9 @@ void main_loop (void)
 	{
 		if(rf_is_rx_finish())
 		{
-		#if(NORDIC_MODE == ESB_MODE)
+		#if(PRIVATE_MODE == ESB_MODE)
 			if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
-		#elif(NORDIC_MODE == SB_MODE)
+		#elif(PRIVATE_MODE == SB_MODE)
 			if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
 		#endif
 			{
@@ -156,9 +156,9 @@ void user_init()
 
 
 	rf_set_acc_code(ACCESS_CODE);
-#if(NORDIC_MODE == ESB_MODE)
+#if(PRIVATE_MODE == ESB_MODE)
 
-#elif(NORDIC_MODE == SB_MODE)
+#elif(PRIVATE_MODE == SB_MODE)
 	rf_pri_set_shockburst_len(RX_PAYLOAD_LEN);
 #endif
 }
@@ -170,9 +170,9 @@ void main_loop (void)
 	while(1)
 	{
 		delay_ms(1);
-	#if(NORDIC_MODE == ESB_MODE)
+	#if(PRIVATE_MODE == ESB_MODE)
 		rf_tx_pkt (Private_ESB_tx_packet);
-	#elif(NORDIC_MODE == SB_MODE)
+	#elif(PRIVATE_MODE == SB_MODE)
 		rf_tx_pkt (Private_SB_tx_packet);
 	#endif
 		while(!rf_is_tx_finish());
@@ -189,9 +189,9 @@ void main_loop (void)
 	{
 		if(rf_is_rx_finish())
 		{
-		#if(NORDIC_MODE == ESB_MODE)
+		#if(PRIVATE_MODE == ESB_MODE)
 			if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
-		#elif(NORDIC_MODE == SB_MODE)
+		#elif(PRIVATE_MODE == SB_MODE)
 			if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
 		#endif
 			{

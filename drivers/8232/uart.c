@@ -58,7 +58,7 @@ void uart_reset(void){
 
 /**
  * @brief     data receive buffer initiate function. DMA would move received uart data to the address space,
- *            uart packet length needs to be no larger than (recBuffLen - 4).
+ *            uart packet length needs to be less than (recBuffLen - 4).
  * @param[in] RecvAddr - pointer to the receiving buffer
  * @param[in] RecvBufLen - length in byte of the receiving buffer
  * @return    none

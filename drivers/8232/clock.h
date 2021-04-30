@@ -140,14 +140,14 @@ void clock_32k_init (CLK_32K_TypeDef src);
  * @param[in] none.
  * @return    none.
  */
-_attribute_ram_code_ void rc_24m_cal (void);
+_attribute_ram_code_sec_noinline_ void rc_24m_cal (void);
 
 /**
  * @brief     This function performs to select 32K as the system clock source.
  * @param[in] none.
  * @return    none.
  */
-_attribute_ram_code_ void rc_32k_cal (void);
+_attribute_ram_code_sec_noinline_ void rc_32k_cal (void);
 
 
 

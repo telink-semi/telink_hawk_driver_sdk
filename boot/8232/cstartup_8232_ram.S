@@ -89,7 +89,7 @@ __start:					@ MUST,  referenced by boot.link
 
 	.org 0x0
 	tj	__reset
-	.word	(0x0004)
+	.word	(0x0005)
 	.org 0x8
 	.word	(0x544c4e4b)
 	.word	(0x00880300)

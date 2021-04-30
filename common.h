@@ -50,5 +50,6 @@
 #include "./drivers/8232/compiler.h"
 #include "./common/string.h"
 #include "./common/types.h"
+#include "./common/tn_sha256.h"
 
 #endif /* COMMON_H */

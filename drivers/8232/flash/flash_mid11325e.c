@@ -1,7 +1,7 @@
 /********************************************************************************************************
- * @file	flash_mid1140c8.h
+ * @file	flash_mid11325e.c
  *
- * @brief	This is the header file for TLSR8232
+ * @brief	This is the source file for TLSR8232
  *
  * @author	Driver Group
  * @date	May 8, 2018
@@ -43,32 +43,7 @@
  *          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *******************************************************************************************************/
-#ifndef __MID1140C8_H__
-#define __MID1140C8_H__
-
-/*
- * @brief     MID = 0x1140c8 Flash include GD25D10C and GD25D10B.
- */
-
-
-/**
- * @brief     define the section of the protected memory area which is read-only and unalterable.
- */
-typedef enum{
-	FLASH_LOCK_NONE_MID1140C8		=	0x00,
-	FLASH_LOCK_LOW_120K_MID1140C8	=	0x04,	//000000h-01DFFFh
-	FLASH_LOCK_LOW_112K_MID1140C8	=	0x08,	//000000h-01BFFFh
-	FLASH_LOCK_LOW_96K_MID1140C8	=	0x0c,	//000000h-017FFFh
-	FLASH_LOCK_LOW_64K_MID1140C8	=	0x10,	//000000h-00FFFFh
-	FLASH_LOCK_ALL_128K_MID1140C8	=	0x1c,	//000000h-01FFFFh
-}mid1140c8_lock_block_e;
-
-/**
- * @brief     the range of bits to be modified when writing status.
- */
-typedef enum{
-	FLASH_WRITE_STATUS_BP_MID1140C8	=	0x1c,
-}mid1140c8_write_status_bit_e;
+#include "flash_type.h"
 
 
 /**
@@ -84,7 +59,10 @@ typedef enum{
  *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
  *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-unsigned char flash_read_status_mid1140c8(void);
+unsigned char flash_read_status_mid11325e(void)
+{
+	return flash_read_status(FLASH_READ_STATUS_CMD_LOWBYTE);
+}
 
 /**
  * @brief 		This function write the status of flash.
@@ -101,7 +79,12 @@ unsigned char flash_read_status_mid1140c8(void);
  *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
  *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-void flash_write_status_mid1140c8(unsigned char data, mid1140c8_write_status_bit_e bit);
+void flash_write_status_mid11325e(unsigned char data, mid11325e_write_status_bit_e bit)
+{
+	unsigned char status = flash_read_status(FLASH_READ_STATUS_CMD_LOWBYTE);
+	data |= (status & ~(bit));
+	flash_write_status(FLASH_TYPE_8BIT_STATUS, data);
+}
 
 /**
  * @brief 		This function serves to set the protection area of the flash.
@@ -117,7 +100,10 @@ void flash_write_status_mid1140c8(unsigned char data, mid1140c8_write_status_bit
  *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
  *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-void flash_lock_mid1140c8(mid1140c8_lock_block_e data);
+void flash_lock_mid11325e(mid11325e_lock_block_e data)
+{
+	flash_write_status_mid11325e(data, FLASH_WRITE_STATUS_BP_MID11325E);
+}
 
 /**
  * @brief 		This function serves to flash release protection.
@@ -132,8 +118,8 @@ void flash_lock_mid1140c8(mid1140c8_lock_block_e data);
  *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
  *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-void flash_unlock_mid1140c8(void);
-
-
-#endif
+void flash_unlock_mid11325e(void)
+{
+	flash_write_status_mid11325e(FLASH_LOCK_NONE_MID11325E, FLASH_WRITE_STATUS_BP_MID11325E);
+}
 

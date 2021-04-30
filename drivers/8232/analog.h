@@ -53,7 +53,7 @@
  * @param[in]  addr - address need to be read.
  * @return     the result of read.
  */
-_attribute_ram_code_ unsigned char analog_read(unsigned char addr);
+_attribute_ram_code_sec_noinline_ unsigned char analog_read(unsigned char addr);
 
 /**
  * @brief      This function serves to analog register write.
@@ -61,4 +61,4 @@ _attribute_ram_code_ unsigned char analog_read(unsigned char addr);
  * @param[in]  v - the value need to be write.
  * @return     none.
  */
-_attribute_ram_code_ void analog_write(unsigned char addr, unsigned char v);
+_attribute_ram_code_sec_noinline_ void analog_write(unsigned char addr, unsigned char v);

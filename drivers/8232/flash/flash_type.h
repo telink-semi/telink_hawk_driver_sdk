@@ -44,33 +44,48 @@
  *
  *******************************************************************************************************/
 #ifndef __FLASH_COMPATIBLE_H__
-
 #define __FLASH_COMPATIBLE_H__
 
-#include "flash_mid1140c8.h"   	// GD25D10C & GD25D10B
-#include "flash_mid134051.h"	// MD25D40DGIG
-#include "flash_mid12325e.h"	// ZB25WD20A
+#include "../flash.h"
+#include "flash_mid1140c8.h"	// GD25D10C / GD25D10B
+#include "flash_mid134051.h"	// MD25D40D
+#include "flash_mid11325e.h"	// ZB25WD10A
 #include "flash_mid13325e.h"	// ZB25WD40B
 
-/*
- * The declaration API in this file just used for internal.
- */
-
 
 /**
- * @brief This function reads the status of flash.
- * @param[in]  cmd - the cmd of read status
- * @param[in]  none
- * @return none
+ * @brief		This function reads the status of flash.
+ * @param[in] 	cmd	- the cmd of read status.
+ * @return 		the value of status.
+ * @note        Attention: Before calling the FLASH function, please check the power supply voltage of the chip.
+ *              Only if the detected voltage is greater than the safe voltage value, the FLASH function can be called.
+ *              Taking into account the factors such as power supply fluctuations, the safe voltage value needs to be greater
+ *              than the minimum chip operating voltage. For the specific value, please make a reasonable setting according
+ *              to the specific application and hardware circuit.
+ *
+ *              Risk description: When the chip power supply voltage is relatively low, due to the unstable power supply,
+ *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
+ *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-_attribute_ram_code_ unsigned char flash_read_status(unsigned char cmd);
+unsigned char flash_read_status(unsigned char cmd);
 
 /**
- * @brief This function write the status of flash.
- * @param[in]  data - the value of status
- * @return     status
+ * @brief 		This function write the status of flash.
+ * @param[in]  	type	- the type of status.8 bit or 16 bit.
+ * @param[in]  	data	- the value of status.
+ * @return 		none.
+ * @note        Attention: Before calling the FLASH function, please check the power supply voltage of the chip.
+ *              Only if the detected voltage is greater than the safe voltage value, the FLASH function can be called.
+ *              Taking into account the factors such as power supply fluctuations, the safe voltage value needs to be greater
+ *              than the minimum chip operating voltage. For the specific value, please make a reasonable setting according
+ *              to the specific application and hardware circuit.
+ *
+ *              Risk description: When the chip power supply voltage is relatively low, due to the unstable power supply,
+ *              there may be a risk of error in the operation of the flash (especially for the write and erase operations.
+ *              If an abnormality occurs, the firmware and user data may be rewritten, resulting in the final Product failure)
  */
-_attribute_ram_code_ void flash_write_status(Flash_Status_Typedef_e type , unsigned short data);
+void flash_write_status(flash_status_typedef_e type , unsigned short data);
 
 
-#endif /* __FLASH_COMPATIBLE_H__ */
+#endif
+

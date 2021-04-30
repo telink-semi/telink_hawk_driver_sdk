@@ -146,23 +146,23 @@ void mcu_stall_wakeup_by_timer2(unsigned int tick);
  * @param   none
  * @return  variable of 32k tick.
  */
-_attribute_ram_code_ unsigned int pm_get_32k_tick (void);
+_attribute_ram_code_sec_noinline_ unsigned int pm_get_32k_tick (void);
 
 /**
  * @brief   This function serves to set the 32k tick.
  * @param   variable of 32k tick.
  * @return  none.
  */
-_attribute_ram_code_ void pm_set_32k_tick (unsigned int tick);
+_attribute_ram_code_sec_noinline_ void pm_set_32k_tick (unsigned int tick);
 
 /***
  * brief: this function can get the 32K count value in real time.
  * pm_get_32k_tick has while(flag),if 32K crystal not vibration, it will stop in while(flag).
  * but get_32k_tick not occur this situation.
  */
-_attribute_ram_code_ unsigned int get_32k_xtal_tick(void);
+_attribute_ram_code_sec_noinline_ unsigned int get_32k_xtal_tick(void);
 
-_attribute_ram_code_ unsigned int get_32k_xtal_set_value(void);
+_attribute_ram_code_sec_noinline_ unsigned int get_32k_xtal_set_value(void);
 
 /**
  * @brief      This function configures a GPIO pin as the wakeup pin.

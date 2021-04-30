@@ -72,7 +72,7 @@ unsigned int ir_dma_fifo_cnt=0;
  * @param[in] 	none
  * @return 		none
  */
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 
 	if(pwm_get_irq_status(PWM0_IR_DMA_FIFO_DONE_IRQ))

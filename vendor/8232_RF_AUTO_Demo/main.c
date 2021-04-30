@@ -52,7 +52,7 @@ extern unsigned int tx_state;
 extern unsigned int rx_state;
 extern unsigned int timeout_state;
 
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
     unsigned short rf_irq_src = rf_irq_get_src();
     if (rf_irq_src) {

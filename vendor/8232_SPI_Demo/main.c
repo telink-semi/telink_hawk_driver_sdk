@@ -55,7 +55,7 @@ int byte_irq_cnt=0;
  * @param[in] 	none
  * @return 		none
  */
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 	irq_cnt ++;
 
@@ -74,7 +74,7 @@ _attribute_ram_code_ void irq_handler(void)
  * @param[in]	none
  * @return      none
  */
-_attribute_ram_code_ int main (void)   //must on ramcode
+_attribute_ram_code_sec_noinline_ int main (void)   //must on ramcode
 {
 	system_init(BSP_INTERNAL_CAP_ENABLE);
 

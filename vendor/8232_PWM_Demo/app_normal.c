@@ -63,7 +63,7 @@
 #define AS_PWMx		AS_PWM0
 #define PWM_ID		PWM0
 
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
     if(pwm_get_irq_status(PWM0_FRAME_IRQ))
 	{

@@ -50,7 +50,7 @@
  * @param   none
  * @return  tick of 32k .
  */
-_attribute_ram_code_ unsigned int get_32k_tick(void)
+_attribute_ram_code_sec_noinline_ unsigned int get_32k_tick(void)
 {
     unsigned int t0 = 0;
     unsigned int t1 = 0;
@@ -86,9 +86,9 @@ _attribute_ram_code_ unsigned int get_32k_tick(void)
  * @return    none
  */
 #if(BLE_SDK_EN)
-_attribute_ram_code_ void sleep_us(unsigned long us)
+_attribute_ram_code_sec_noinline_ void sleep_us(unsigned long us)
 #else
-_attribute_ram_code_ void delay_us (unsigned long us)
+_attribute_ram_code_sec_noinline_ void delay_us (unsigned long us)
 #endif
 {
 	unsigned long t = get_sys_tick();
@@ -101,7 +101,7 @@ _attribute_ram_code_ void delay_us (unsigned long us)
  * @param[in] us - mounts need to sleep.
  * @return    none
  */
-_attribute_ram_code_ void delay_ms (unsigned long ms)
+_attribute_ram_code_sec_noinline_ void delay_ms (unsigned long ms)
 {
 	unsigned long t = get_sys_tick();
 	while(!timeout_ms(t, ms)){

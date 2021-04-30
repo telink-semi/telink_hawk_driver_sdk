@@ -112,7 +112,7 @@ void pwm_kick_32k_pad(void)
  * @param[in]   variable of 32k type.
  * @return  none.
  */
-_attribute_ram_code_ void clock_32k_init (CLK_32K_TypeDef src)
+_attribute_ram_code_sec_noinline_ void clock_32k_init (CLK_32K_TypeDef src)
 {
 	unsigned char sel_32k   = analog_read(0x2d)&0x7f;
 	unsigned char power_32k = analog_read(0x05)&0xfc;
@@ -135,7 +135,7 @@ _attribute_ram_code_ void clock_32k_init (CLK_32K_TypeDef src)
  * @param[in] none.
  * @return    none.
  */
-_attribute_ram_code_ void rc_24m_cal (void)
+_attribute_ram_code_sec_noinline_ void rc_24m_cal (void)
 {
 	unsigned char temp = 0;
 
@@ -189,7 +189,7 @@ _attribute_ram_code_ void rc_24m_cal (void)
  * @param[in] none.
  * @return    none.
  */
-_attribute_ram_code_ void rc_32k_cal (void)
+_attribute_ram_code_sec_noinline_ void rc_32k_cal (void)
 {
 	unsigned char temp = 0;
 

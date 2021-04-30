@@ -152,9 +152,9 @@ void sub_wr(unsigned int addr, unsigned char value, unsigned char e, unsigned ch
  */
 unsigned char internal_cap_flag;
 #if(BLE_SDK_EN)
-_attribute_ram_code_  void cpu_wakeup_init(void)
+_attribute_ram_code_sec_noinline_  void cpu_wakeup_init(void)
 #else
-_attribute_ram_code_ void system_init(Bsp_InternalCapDef cap_flag)    //must on ramcode
+_attribute_ram_code_sec_noinline_ void system_init(Bsp_InternalCapDef cap_flag)    //must on ramcode
 #endif
 {
 	internal_cap_flag = cap_flag;

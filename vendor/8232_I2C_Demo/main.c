@@ -52,7 +52,7 @@ extern void main_loop (void);
 int irq_cnt = 0;
 int i2c_read_cnt = 0;
 int i2c_write_cnt = 0;
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 	irq_cnt ++;
 
@@ -81,7 +81,7 @@ _attribute_ram_code_ void irq_handler(void)
  * @param[in]	none
  * @return      none
  */
-_attribute_ram_code_ int main (void)   //must on ramcode
+_attribute_ram_code_sec_noinline_ int main (void)   //must on ramcode
 {
 	system_init(BSP_INTERNAL_CAP_ENABLE);
 

@@ -61,7 +61,7 @@ extern __attribute__((aligned(4))) unsigned char rec_buff[rec_buff_Len];
 extern __attribute__((aligned(4))) unsigned char trans_buff[trans_buff_Len];
 
 
-_attribute_ram_code_ void irq_handler(void)
+_attribute_ram_code_sec_noinline_ void irq_handler(void)
 {
 
 #if (UART_MODE==UART_DMA)

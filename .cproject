@@ -45,9 +45,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.831257467" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.273606372" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.803089855" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.512833944" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.131247316" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -1698,9 +1699,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.335741902" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.1129476896" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.548745975" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.964091022" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.237452163" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -3352,9 +3354,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.1652805513" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.384171967" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.412946948" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.26729105" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1269483596" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -5005,9 +5008,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.869189225" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.2145349634" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.2134830311" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.422054707" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.628481953" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -6658,9 +6662,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.1570056873" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.43027668" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.36036368" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.549820721" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1581657206" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -8311,9 +8316,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.165883896" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.116036893" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.2087321780" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1065260937" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1728970442" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -9964,9 +9970,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.315140301" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.587399221" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.1216497796" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1320269778" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.2034541821" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -11617,9 +11624,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.472532032" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.256209656" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.1621012441" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.400540790" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.588193682" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -13270,9 +13278,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.464570008" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.438883234" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.1561093766" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1547157970" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1908158144" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -14923,9 +14932,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.660119847" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.1814560878" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.80653814" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1701188139" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1001233309" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -16576,9 +16586,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.5244660" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.1539689259" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.1782344375" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.71363377" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.607372307" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -18229,9 +18240,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.780019166" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.1874942593" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.589103708" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1220492890" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1072983251" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -19882,9 +19894,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.1597381455" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.1641602102" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.147288012" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.621731171" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.1856866692" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">
@@ -21535,9 +21548,10 @@
 							</tool>
 							<tool command="tc32-elf-ld --gc-sections" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug.831730975" name="TC32 C Linker" superClass="com.telink.tc32eclipse.tool.linker.TC32Win.app.debug">
 								<option id="com.telink.tc32eclipse.linker.option.libpath.2079158583" name="Libraries Path (-L)" superClass="com.telink.tc32eclipse.linker.option.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/proj_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers/8232}&quot;"/>
 								</option>
-								<option id="com.telink.tc32eclipse.linker.option.libs.1340598428" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
+								<option id="com.telink.tc32eclipse.linker.option.libs.1547069407" name="Libraries (-l)" superClass="com.telink.tc32eclipse.linker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="B83"/>
 								</option>
 								<inputType id="com.telink.tc32eclipse.tool.linker.input.229654383" name="OBJ Files" superClass="com.telink.tc32eclipse.tool.linker.input">

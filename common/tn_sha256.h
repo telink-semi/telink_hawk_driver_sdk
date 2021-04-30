@@ -1,7 +1,7 @@
 /********************************************************************************************************
- * @file	watchdog.c
+ * @file	tn_sha256.h
  *
- * @brief	This is the source file for TLSR8232
+ * @brief	This is the header file for TLSR8232
  *
  * @author	Driver Group
  * @date	May 8, 2018
@@ -43,21 +43,39 @@
  *          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *******************************************************************************************************/
-#include "register.h"
-#include "gpio.h"
+#ifndef _TN_SHA256_H_
+#define _TN_SHA256_H_
+#include "string.h"
+#include "types.h"
+//#include "tn_dtls_include.h"
+//typedef unsigned int u32;
+#define SHA256_BLOCK_LENGTH       64
+#define SHA256_DIGEST_LENGTH      32
 
-/**
- * @brief     This function set the seconds period.It is likely with WD_SetInterval.
- *            Just this function calculate the value to set the register automatically .
- * @param[in] period_s - The seconds to set. unit is second
- * @return    none
- */
-void wd_set_interval_ms(unsigned int period_ms,unsigned long int tick_per_ms)
+typedef struct
 {
-	static unsigned short tmp_period_ms = 0;
-	tmp_period_ms = (period_ms*tick_per_ms>>18);
-	reg_tmr2_tick = 0x00000000;    //reset tick register
-	reg_tmr_ctrl &= (~FLD_TMR_WD_CAPT);
-	reg_tmr_ctrl |= (tmp_period_ms<<9); //set the capture register
-}
+    unsigned int total[2];
+    unsigned int state[8];
+    unsigned char buffer[64];
+} sha256_context;
 
+void sha256_init( sha256_context *ctx );
+
+void sha256_starts( sha256_context *ctx, int is224 );
+
+void sha256_update( sha256_context *ctx, const unsigned char *input, u32 ilen );
+
+void sha256_finish( sha256_context *ctx, unsigned char output[32] );
+
+void sha256( const unsigned char *input, u32 ilen, unsigned char output[32], int is224 );
+
+void sha256_hmac( const unsigned char *key, u32 keylen,
+                  const unsigned char *input, u32 ilen,
+                  unsigned char output[32] );
+
+unsigned char tl_hmac_sha256(unsigned char *key, int counter,  unsigned char *kmac, unsigned char *kmle);
+// stack size: 300-byte
+
+int sha256_self_test( int verbose );
+
+#endif /* _TN_SHA256_H_ */
