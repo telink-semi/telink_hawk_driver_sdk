@@ -54,7 +54,7 @@ extern "C" {
 #define ADC_VBAT_MODE			2	//Battery Voltage
 #define ADC_RNG_MODE			3	//Random number Gernerator
 
-#define ADC_MODE				ADC_RNG_MODE
+#define ADC_MODE				ADC_BASE_MODE
 
 
 
@@ -64,7 +64,8 @@ extern "C" {
 
 
 /////////////////// Clock  /////////////////////////////////
-#define CLOCK_SYS_CLOCK_HZ  	16000000
+//After increasing the system clock, the ADC sampling time will decrease.
+#define CLOCK_SYS_CLOCK_HZ  	48000000
 
 #if(CLOCK_SYS_CLOCK_HZ==12000000)
 	#define SYS_CLK  	SYS_CLK_12M_XTAL

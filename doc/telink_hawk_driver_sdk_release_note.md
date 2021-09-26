@@ -1,4 +1,71 @@
-﻿### Version：V1.3.0
+﻿### Version：V1.4.0
+* SDK version : telink_hawk_driver_sdk v1.4.0.
+* This version sdk support hawk.
+
+### Bug Fixes
+
+* **emi**
+  * Solved the problem of substandard radiation in burst mode in KC certification.
+* **pm**
+  * fix the issue that suspend current may abnormal in a few of chip.
+
+### Refactoring
+
+* **lib**
+  * Adjust the structure of the files to be sealed into the library.
+* **adc**
+  * Modified the adc_base_pin_init(pin) interfaces, adc_base_pin_init(pin) is used for the IO port configuration of ADC IO voltage sampling, which is convenient for switching the GPIO channel of ADC sampling.
+
+### Features
+
+* **boot**
+  * In cstartup_8232_ram.S, add LOAD_RAM compilation mode and use DUT_TEST to distinguish between DUT and RAM compilation mode.
+* **flash**
+  * Added the supported flash models TH25D40HB(mid1360cd).
+* **adc**
+  * The adc_set_sample_num(sample_num) interface is newly added, which can be used to modify the sampling times. The sampling times can only use the enumeration variable adc_sample_num_4 or adc_sample_num_8.
+
+### BREAKING CHANGES
+
+* **flash**
+  * Added user_read_flash_value_calib() function, which contains frequency offset calibration sub-functions. Note: If you use the new version of the SDK, you need to call user_read_flash_value_calib() after cpu_wakeup_init(), and you must use it in this way, otherwise, abnormal functions or abnormalities may occur.
+
+<hr style="border-bottom:2.5px solid rgb(146, 240, 161)">
+
+### 版本
+
+* SDK版本: telink_hawk_driver_sdk v1.4.0。
+* 此版本SDK支持hawk芯片。
+
+### Bug Fixes
+
+* **emi**
+  * 解决了KC认证中burst模式下辐射不达标的问题。
+* **pm**
+  * 解决少数芯片suspend电流不正常问题。
+
+### Refactoring
+
+* **lib**
+  * 对要封成库的文件进行结构调整。
+* **adc**
+  * 修改了adc_base_pin_init(pin)接口，adc_base_pin_init(pin)用于ADC IO口电压采样的IO口配置,便于切换ADC采样的GPIO通道。
+
+### Features
+
+* **boot**
+  * 在cstartup_8232_ram.S中,添加LOAD_RAM的编译方式,使用DUT_TEST宏定义区分DUT和ram的编译方式。
+* **flash**
+  * 增加了支持的flash型号TH25D40HB（mid1360cd）。
+* **adc**
+  * 新增加adc_set_sample_num(sample_num)接口，可用于修改采样次数。采样次数仅能使用枚举变量adc_sample_num_4或者adc_sample_num_8。
+
+### BREAKING CHANGES
+
+* **flash**
+  * 新增user_read_flash_value_calib()函数，函数中包含频偏校准子函数。注意：如果使用新版本SDK，需要在cpu_wakeup_init()后调用user_read_flash_value_calib()，必须按照这样使用，否则有可能出现功能不正常或者异常现象。
+
+### Version：V1.3.0
 * SDK version : telink_hawk_driver_sdk v1.3.0.
 * This version sdk support hawk.
 

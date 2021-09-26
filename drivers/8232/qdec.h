@@ -46,7 +46,7 @@
 #pragma once
 
 #include "clock.h"
-#include "pm.h"
+#include "lib/include/pm.h"
 #include "register.h"
 
 /**

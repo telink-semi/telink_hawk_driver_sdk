@@ -53,6 +53,8 @@
 #ifndef __IRQ_STK_SIZE__
 #define	__IRQ_STK_SIZE__		0x100
 #endif
+
+#define DUT_TEST  0
 	.code	16
 @********************************************************************************************************
 @                                           MACROS AND DEFINIITIONS
@@ -63,9 +65,16 @@
 	.equ IRQ_MODE, 		0x12	@ Interrupt Request mode
 	.equ SVC_MODE, 		0x13	@ Supervisor mode 
 	.equ IRQ_STK_SIZE,	__IRQ_STK_SIZE__
-	.equ __LOAD_RAM, 	__LOAD_RAM_SIZE__
+#if DUT_TEST
+	//.equ __LOAD_RAM, 	__LOAD_RAM_SIZE__
+	.equ __LOAD_RAM, 	0
 	.equ __LOAD_FLASH, 	0
 	.equ __LOAD_DUT, 	8
+#else
+	.equ __LOAD_FLASH, 	0
+	.equ __LOAD_DUT, 	0
+	.equ __LOAD_RAM, 	1
+#endif
 @********************************************************************************************************
 @                                            TC32 EXCEPTION VECTORS
 @********************************************************************************************************
@@ -82,17 +91,19 @@ __start:					@ MUST,  referenced by boot.link
 	.extern irq_handler
 
 	.extern  _ramcode_size_div_16_
+	.extern  _bin_size_div_16
 	.extern  _ramcode_size_div_256_
 	.extern  _ramcode_size_div_16_align_256_
+	.extern  _ramcode_size_align_256_
 	.extern  _ictag_start_
 	.extern  _ictag_end_
 
 	.org 0x0
 	tj	__reset
-	.word	(0x0005)
+	.word	(0x0006)
 	.org 0x8
 	.word	(0x544c4e4b)
-	.word	(0x00880300)
+	.word	(0x00880000 + _bin_size_div_16)
 
 	.org 0x10
 	tj		__irq
@@ -170,8 +181,7 @@ SETIC:
 	@tmov		r0, #0;
 	@tstorerb	r0, [r1, #2]
 
-
-
+#if 0
 	tloadr		r1, DATA_I
 	tloadr		r2, DATA_I+4
 	tloadr		r3, DATA_I+8
@@ -184,6 +194,8 @@ COPY_DATA:
 	tadd		r2, #4
 	tj			COPY_DATA
 COPY_DATA_END:
+
+#endif
 
 #if 0
 SETSPISPEED:
@@ -209,6 +221,7 @@ DAT0:
 	.word	64                          @28		@ IC tag start
 	.word	64	                	@32		@ IC tag end
 	.word	_ramcode_size_div_256_			@36
+	.word   _ramcode_size_align_256_
 @	.word	(0x808000 + __LOAD_RAM * 0x100)                  @28		@ IC tag start
 @	.word	(0x808000 + (__LOAD_RAM + 1) * 0x100)            @32		@ IC tag end
 @	.word	(0x80000e)    				@36
@@ -222,7 +235,7 @@ DATA_I:
 
 FLL_D:
 	.word	0xffffffff
-	.word	(_start_data_)
+	.word	(_start_bss_)
 	.word	(0x80c000)
 
 	.align 4

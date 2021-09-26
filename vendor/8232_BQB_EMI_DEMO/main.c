@@ -44,6 +44,7 @@
  *
  *******************************************************************************************************/
 #include "drivers.h"
+#include "calibration.h"
 #include "app_config.h"
 #if (TEST_DEMO == BQB_DEMO)
 #include "BQB/phytest.h"
@@ -86,6 +87,11 @@ void sys_init(void)
 #else
 	system_init(SWITCH_INTERNAL_EXTERNAL_CAP);
 #endif
+
+	//Note: This function must be called, otherwise an abnormal situation may occur.
+	//Called immediately after cpu_wakeup_init, set in other positions, some calibration values may not take effect.
+	user_read_flash_value_calib();
+
 	clock_init(SYS_CLK);  //system clock = 192 /12 = 16Mhz
 
 	gpio_init();

@@ -160,7 +160,7 @@ void user_init(void){
 		if(internal_cap_flag)
 		{
 			//ana_81<4:0> is cap value(0x00 - 0x1f)
-			analog_write(0x81, (analog_read(0x81)&0xe0) | (usr_cap & 0x1f) );
+			rf_update_internal_cap(usr_cap);
 		}
 	}
 #if SPECIAL_PROCESS

@@ -56,10 +56,10 @@
 #include "drivers/8232/pwm.h"
 #include "drivers/8232/irq.h"
 #include "drivers/8232/clock.h"
-#include "drivers/8232/random.h"
+#include "drivers/8232/lib/include/random.h"
 #include "drivers/8232/flash.h"
-#include "drivers/8232/rf_drv.h"
-#include "drivers/8232/pm.h"
+#include "drivers/8232/lib/include/rf_drv.h"
+#include "drivers/8232/lib/include/pm.h"
 #include "drivers/8232/adc.h"
 #include "drivers/8232/i2c.h"
 #include "drivers/8232/spi.h"
@@ -70,8 +70,9 @@
 #include "drivers/8232/qdec.h"
 #include "drivers/8232/dma.h"
 #include "drivers/8232/timer.h"
-#include "drivers/8232/emi.h"
+#include "drivers/8232/lib/include/emi.h"
 
+#include "drivers/8232/printf.h"
 #include "drivers/8232/flash/flash_type.h"
 
 /*! \mainpage API User guide for TLSR8258F512

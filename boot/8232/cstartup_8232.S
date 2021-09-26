@@ -65,7 +65,8 @@
 	.equ IRQ_MODE, 		0x12	@ Interrupt Request mode
 	.equ SVC_MODE, 		0x13	@ Supervisor mode 
 	.equ IRQ_STK_SIZE,	__IRQ_STK_SIZE__
-	.equ __LOAD_RAM, 	__LOAD_RAM_SIZE__
+	//.equ __LOAD_RAM, 	__LOAD_RAM_SIZE__
+	.equ __LOAD_RAM, 	0
 	.equ __LOAD_FLASH, 	1
 	.equ __LOAD_DUT, 	0
 	
@@ -88,6 +89,7 @@ __start:					@ MUST,  referenced by boot.link
 	.extern  _ramcode_size_div_16_
 	.extern  _ramcode_size_div_256_
 	.extern  _ramcode_size_div_16_align_256_
+	.extern  _ramcode_size_align_256_
 	.extern  _ictag_start_
 	.extern  _ictag_end_
 
@@ -210,6 +212,7 @@ DAT0:
 	.word	_ictag_start_               @28		@ IC tag start
 	.word	_ictag_end_	            	@32		@ IC tag end
 	.word	_ramcode_size_div_256_		@36
+	.word   _ramcode_size_align_256_
 @	.word	(0x808000 + __LOAD_RAM * 0x100)                  @28		@ IC tag start
 @	.word	(0x808000 + (__LOAD_RAM + 1) * 0x100)            @32		@ IC tag end
 @	.word	(0x80000e)    				@36

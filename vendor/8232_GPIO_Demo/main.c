@@ -44,6 +44,7 @@
  *
  *******************************************************************************************************/
 #include "app_config.h"
+#include "calibration.h"
 
 
 extern void user_init();
@@ -123,6 +124,10 @@ _attribute_ram_code_sec_noinline_ void irq_handler(void)
 int main (void)   //must on ramcode
 {
 	system_init(BSP_INTERNAL_CAP_ENABLE);
+
+	//Note: This function must be called, otherwise an abnormal situation may occur.
+	//Called immediately after cpu_wakeup_init, set in other positions, some calibration values may not take effect.
+	user_read_flash_value_calib();
 
 	clock_init(SYS_CLK);
 

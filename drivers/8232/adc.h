@@ -55,7 +55,10 @@ extern volatile unsigned short adc_cal_value;
 volatile unsigned short	adc_code;
 
 
-
+typedef enum{
+	adc_sample_num_4 = 4,
+	adc_sample_num_8 = 8,
+}adc_sample_num_e;
 /**
  *  ADC reference voltage
  */
@@ -769,7 +772,14 @@ void adc_base_init(GPIO_PinTypeDef pin);
  */
 
 void adc_vbat_init(GPIO_PinTypeDef pin);
-
+/**
+ * @brief 		This function serves to set adc sampling number.
+ * 				The recommended number of samples is 8 normally.If the number of samples is less than 8, it will cause insufficient measurement accuracy.
+ * 				The default number of samples is 8.
+ * @param[in]  	adc_sample_num_e sample_num - the ADC sample number.adc_sample_num_4 or adc_sample_num_8.
+ * @return 		none.
+ */
+void adc_set_sample_num(adc_sample_num_e sample_num);
 /**
  * @brief This function serves to set adc sampling and get results.
  * @param[in]  none.

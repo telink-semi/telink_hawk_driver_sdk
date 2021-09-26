@@ -108,7 +108,7 @@ void read_flash_para(void)
 
 		if(cap != 0xff && cap > 0xbf && cap < 0xe0 )
 		{
-			analog_write(0x81,cap);
+			rf_update_internal_cap(cap);
 		}
 	}
 

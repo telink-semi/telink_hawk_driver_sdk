@@ -67,6 +67,7 @@ GPIO_PinTypeDef ADC_GPIO_tab[10] = {
 
 
 };
+volatile unsigned char adc_sample_num = adc_sample_num_8;
 
 const unsigned char  Vref_tab[4] = {2,3,4,1};
 const unsigned char  VBAT_Scale_tab[4] = {1,4,3,2};
@@ -90,7 +91,7 @@ void adc_init(void ){
 
 	/******set adc L R channel Gain Stage bias current trimming******/
 	//adc_set_pga_left_power_on(0);
-	//adc_set_pga_right_power_on(0); Hawk Ã»ÓÐÓÒÍ¨µÀPGA
+	//adc_set_pga_right_power_on(0);
 	adc_set_left_gain_bias(ADC_GAIN_STAGE_BIAS_PER100);
 	//adc_set_right_gain_bias(ADC_GAIN_STAGE_BIAS_PER100);
 }
@@ -102,11 +103,30 @@ void adc_init(void ){
  */
 void adc_base_pin_init(GPIO_PinTypeDef pin)
 {
+	unsigned char i;
+	unsigned char gpio_num=0;
 	//ADC GPIO Init
 	gpio_set_func(pin, AS_GPIO);
 	gpio_set_input_en(pin,0);
 	gpio_set_output_en(pin,0);
 	gpio_write(pin,0);
+
+	for(i=0;i<10;i++)
+	{
+		if(pin == ADC_GPIO_tab[i])
+		{
+			gpio_num = i+1;
+			break;
+		}
+	}
+
+#if ADC_SINGLE_END
+	adc_set_all_input_mode(ADC_MISC_CHN, SINGLE_ENDED_MODE);
+	adc_set_all_single_end_ain(ADC_MISC_CHN, gpio_num);
+#else
+	adc_set_all_input_mode(ADC_MISC_CHN, DIFFERENTIAL_MODE);
+	adc_set_all_differential_p_n_ain(ADC_MISC_CHN, gpio_num, GND);
+#endif
 }
 
 /**
@@ -131,8 +151,6 @@ void adc_vbat_pin_init(GPIO_PinTypeDef pin)
 
 void adc_base_init(GPIO_PinTypeDef pin)
 {
-	unsigned char i;
-	unsigned char gpio_num=0;
 
 	//set R_max_mc,R_max_c,R_max_s
 	adc_set_misc_rns_capture_state_length(0xf0);						//max_mc
@@ -151,23 +169,6 @@ void adc_base_init(GPIO_PinTypeDef pin)
 	adc_set_vref_vbat_div(ADC_VBAT_DIVIDER_OFF);
 	ADC_VBAT_Scale = VBAT_Scale_tab[ADC_VBAT_DIVIDER_OFF];
 
-	//set channel mode and channel
-	adc_base_pin_init(pin);		//ADC GPIO Init
-	for(i=0;i<11;i++)
-	{
-		if(pin == ADC_GPIO_tab[i])
-		{
-			gpio_num = i+1;
-			break;
-		}
-	}
-#if ADC_SINGLE_END
-	adc_set_all_input_mode(ADC_MISC_CHN, SINGLE_ENDED_MODE);
-	adc_set_all_single_end_ain(ADC_MISC_CHN, gpio_num);
-#else
-	adc_set_all_input_mode(ADC_MISC_CHN, DIFFERENTIAL_MODE);
-	adc_set_all_differential_p_n_ain(ADC_MISC_CHN, gpio_num, GND);
-#endif
 
 	//set resolution for RNG
 	adc_set_all_resolution(ADC_MISC_CHN, RES14);
@@ -181,6 +182,7 @@ void adc_base_init(GPIO_PinTypeDef pin)
 	//set RNG mode
 	adc_set_mode(ADC_NORMAL_MODE);
 
+	adc_base_pin_init(pin);
 }
 
 
@@ -465,7 +467,17 @@ void adc_set_all_ain_pre_scaler(ADC_PreScalingTypeDef v_scl)
 
 }
 
-#define ADC_SAMPLE_NUM		8 //4, 8
+/**
+ * @brief 		This function serves to set adc sampling number.
+ * 				The recommended number of samples is 8 normally.If the number of samples is less than 8, it will cause insufficient measurement accuracy.
+ * 				The default number of samples is 8.
+ * @param[in]  	adc_sample_num_e sample_num - the ADC sample number.adc_sample_num_4 or adc_sample_num_8.
+ * @return 		none.
+ */
+void adc_set_sample_num(adc_sample_num_e sample_num)
+{
+	adc_sample_num = sample_num;
+}
 
 /**
  * @brief This function serves to set adc sampling and get results.
@@ -473,14 +485,12 @@ void adc_set_all_ain_pre_scaler(ADC_PreScalingTypeDef v_scl)
  * @return the result of sampling.
  */
 
-volatile signed short dat_buf[ADC_SAMPLE_NUM];
-
-_attribute_ram_code_sec_noinline_ unsigned int adc_set_sample_and_get_result(void)
+unsigned int adc_set_sample_and_get_result(void)
 {
+	volatile signed short dat_buf[64];//size must 8 byte aligned(8/16/24...)
 	unsigned short temp;
-	//volatile signed int adc_dat_buf[ADC_SAMPLE_NUM];
 	unsigned int adc_vol_mv;
-	unsigned short adc_sample[ADC_SAMPLE_NUM] = {0};
+	volatile unsigned short adc_sample[64];
 	unsigned int adc_result;
 	int i,j;
 
@@ -488,19 +498,15 @@ _attribute_ram_code_sec_noinline_ unsigned int adc_set_sample_and_get_result(voi
 	aif_reset();
 
 	unsigned int t0 = get_sys_tick();
-//
-//	for(i=0;i<ADC_SAMPLE_NUM;i++){   	//dfifo data clear
-//		dat_buf[i] = 0;
-//	}
 
 	while(!timeout_us(t0, 25));  //wait at least 2 sample cycle(f = 96K, T = 10.4us)
 	//dfifo setting will lose in suspend/deep, so we need config it every time
-	adc_aif_set_misc_buf((unsigned short *)dat_buf,ADC_SAMPLE_NUM);  //size: ADC_SAMPLE_NUM*4
+	adc_aif_set_misc_buf((unsigned short *)dat_buf,adc_sample_num);  //size: ADC_SAMPLE_NUM*4
 	adc_aif_set_m_chn_en(1);
 	adc_aif_set_use_raw_data_en();
 
 //////////////// get adc sample data and sort these data ////////////////
-	for(i=0;i<ADC_SAMPLE_NUM;i++){
+	for(i=0;i<adc_sample_num;i++){
 		while((!dat_buf[i])||(!timeout_us(t0,16)));  //wait for new adc sample data,
 															   //When the data is not zero or more than 1.5 sampling times (when the data is zero),The default data is already ready.
 		t0 = get_sys_tick();
@@ -528,12 +534,11 @@ _attribute_ram_code_sec_noinline_ unsigned int adc_set_sample_and_get_result(voi
 
 	adc_aif_set_m_chn_en(0);		//misc channel data dfifo disable
 	
-///// get average value from raw data(abandon some small and big data ), then filter with history data //////
-#if (ADC_SAMPLE_NUM == 4)  	//use middle 2 data (index: 1,2)
-	unsigned int adc_average = (adc_sample[1] + adc_sample[2])/2;
-#elif(ADC_SAMPLE_NUM == 8) 	//use middle 4 data (index: 2,3,4,5)
-	unsigned int adc_average = (adc_sample[2] + adc_sample[3] + adc_sample[4] + adc_sample[5])/4;
-#endif
+	//get average value from raw data(abandon 1/4 small and 1/4 big data)
+	volatile unsigned int adc_average = 0;
+	for(i = adc_sample_num>>2; i < (adc_sample_num - (adc_sample_num>>2)); i++){
+		adc_average += (adc_sample[i]/(adc_sample_num>>1));
+	}
 
 	adc_code = adc_result = adc_average;
 
@@ -554,5 +559,46 @@ _attribute_ram_code_sec_noinline_ unsigned int adc_set_sample_and_get_result(voi
 
 	return adc_vol_mv;
 }
-
+/*The measurement error of HAWK's temperature sensor is too large and cannot be used normally.
+ * If you really want to use it, you can open the macro definition.
+ * 1.must first call the adc_temp_init interface to initialize the temperature sensor adc sampling channel.
+ * 2.call the adc_set_sample_and_get_result interface to get the adc_code value.
+ * 3.fit the curve according to the actual temperature and the code value to find the linear relationship.*/
+#if(0)
+/**
+ * @brief This function servers to test ADC temp.When the reference voltage is set to 1.2V, and
+ * at the same time, the division factor is set to 1/2 the most accurate.
+ * @param[in]  none.
+ * @return     none.
+ */
+void adc_temp_init(void)
+{
+//set R_max_mc,R_max_c,R_max_s
+	adc_set_misc_rns_capture_state_length(0xf0);						//max_mc
+//	adc_set_left_right_capture_state_length(AMIC_ADC_SampleLength[0]);	//max_c	96K
+	adc_set_all_set_state_length(0x0a);
+	//set total length for sampling state machine and channel
+	adc_set_chn_en(ADC_MISC_CHN);
+	adc_set_max_state_cnt(0x02);
+	//set channel Vref
+	adc_set_all_vref(ADC_MISC_CHN, ADC_VREF_1P2V);
+	ADC_Vref = (unsigned char)ADC_VREF_1P2V;
+	//set Vbat divider select,
+	adc_set_vref_vbat_div(ADC_VBAT_DIVIDER_OFF);
+	ADC_VBAT_Scale = VBAT_Scale_tab[ADC_VBAT_DIVIDER_OFF];
+	adc_set_all_input_mode(ADC_MISC_CHN, DIFFERENTIAL_MODE);
+	adc_set_all_differential_p_n_ain(ADC_MISC_CHN, 0xe, 0xe);//TEMSENSOR_P TEMSENSOR_N
+	//set resolution for RNG
+	adc_set_all_resolution(ADC_MISC_CHN, RES14);
+//Number of ADC clock cycles in sampling phase
+	adc_set_all_tsample_cycle(ADC_MISC_CHN, SAMPLING_CYCLES_6);
+	//set Analog input pre-scaling
+	adc_set_all_ain_pre_scaler(ADC_PRESCALER_1F2);
+	ADC_Pre_Scale = 1<<(unsigned char)ADC_PRESCALER_1F2;
+	//set RNG mode
+	adc_set_mode(ADC_NORMAL_MODE);
+	//enable temperature sensor
+	analog_write(0x05, (analog_read(0x05)&0xbf));
+}
+#endif
 
