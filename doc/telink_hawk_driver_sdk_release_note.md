@@ -45,7 +45,7 @@
 ### Refactoring
 
 * **rf**
-  *规范化与私有模式相关内容的命名
+  * 规范化与私有模式相关内容的命名
 
 ### Performance Improvements
 
