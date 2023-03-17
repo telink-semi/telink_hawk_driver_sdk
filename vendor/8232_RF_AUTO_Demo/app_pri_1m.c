@@ -51,7 +51,7 @@
 #define RX_FIRST				2
 #define RF_STRX_MODE			TX_FIRST
 
-#define ESB_MODE  1
+#define TPLL_MODE  1
 #define SB_MODE   2
 #define PRIVATE_MODE			    SB_MODE
 #define RX_PAYLOAD_LEN			32
@@ -73,7 +73,7 @@ volatile unsigned int rx_state=0;
 volatile unsigned int timeout_state=0;
 unsigned char  rx_packet[64]  __attribute__ ((aligned (4)));
 unsigned char  Private_SB_tx_packet[48] __attribute__ ((aligned (4))) = {0x20,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
-unsigned char  Private_ESB_tx_packet[48] __attribute__ ((aligned (4))) = {0x21,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
+unsigned char  Private_TPLL_tx_packet[48] __attribute__ ((aligned (4))) = {0x21,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
 
 
 
@@ -116,9 +116,9 @@ void user_init()
 #endif
 
 	rf_set_acc_code(ACCESS_CODE);
-	#if(PRIVATE_MODE == ESB_MODE)
+	#if(PRIVATE_MODE == TPLL_MODE)
 	#elif(PRIVATE_MODE == SB_MODE)
-	rf_pri_set_shockburst_len(RX_PAYLOAD_LEN);
+	rf_fix_payload_len_set(RX_PAYLOAD_LEN);
 	#endif
 }
 
@@ -134,8 +134,8 @@ void main_loop (void)
 		rx_state=0;
 		timeout_state=0;
 		delay_ms(1);
-		#if(PRIVATE_MODE == ESB_MODE)
-		rf_start_stx2rx (Private_ESB_tx_packet, get_sys_tick()+16*TX_DELAY_US,STX_WAITTIME_US);
+		#if(PRIVATE_MODE == TPLL_MODE)
+		rf_start_stx2rx (Private_TPLL_tx_packet, get_sys_tick()+16*TX_DELAY_US,STX_WAITTIME_US);
 		#elif(PRIVATE_MODE == SB_MODE)
 		rf_start_stx2rx (Private_SB_tx_packet, get_sys_tick()+16*TX_DELAY_US,STX_WAITTIME_US);
 		#endif
@@ -148,10 +148,10 @@ void main_loop (void)
 			}
 			else if(rx_state==1)//rx
 			{
-				#if(PRIVATE_MODE == ESB_MODE)
-					if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
+				#if(PRIVATE_MODE == TPLL_MODE)
+					if(RF_TPLL_PACKET_CRC_OK(rx_packet)&&RF_TPLL_PACKET_LENGTH_OK(rx_packet))
 				#elif(PRIVATE_MODE == SB_MODE)
-					if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
+					if(RF_SB_PACKET_CRC_OK(rx_packet))
 				#endif
 				rx_cnt++;
 				break;
@@ -173,8 +173,8 @@ void main_loop (void)
 		tx_state=0;
 		rx_state=0;
 		timeout_state=0;
-		#if(PRIVATE_MODE == ESB_MODE)
-		rf_start_srx2tx (Private_ESB_tx_packet, get_sys_tick()+16*TX_DELAY_US,SRX_WAITTIME_US);
+		#if(PRIVATE_MODE == TPLL_MODE)
+		rf_start_srx2tx (Private_TPLL_tx_packet, get_sys_tick()+16*TX_DELAY_US,SRX_WAITTIME_US);
 		#elif(PRIVATE_MODE == SB_MODE)
 		rf_start_srx2tx (Private_SB_tx_packet, get_sys_tick()+16*TX_DELAY_US,SRX_WAITTIME_US);
 		#endif
@@ -190,10 +190,10 @@ void main_loop (void)
 			else if(rx_state==1)//rx (check crc & length)
 			{
 				rx_state=0;
-				#if(PRIVATE_MODE == ESB_MODE)
-					if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
+				#if(PRIVATE_MODE == TPLL_MODE)
+					if(RF_TPLL_PACKET_CRC_OK(rx_packet)&&RF_TPLL_PACKET_LENGTH_OK(rx_packet))
 				#elif(PRIVATE_MODE == SB_MODE)
-					if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
+					if(RF_SB_PACKET_CRC_OK(rx_packet))
 				#endif
 				rx_cnt++;
 			}

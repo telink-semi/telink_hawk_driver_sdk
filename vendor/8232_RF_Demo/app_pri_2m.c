@@ -54,7 +54,7 @@
 #define MANUAL				2
 #define RF_AUTO_MODE 		MANUAL
 
-#define ESB_MODE  			1
+#define TPLL_MODE  			1
 #define SB_MODE   			2
 #define PRIVATE_MODE			SB_MODE
 
@@ -67,7 +67,7 @@ volatile unsigned int rx_cnt=0;
 volatile unsigned int tx_cnt=0;
 unsigned char  rx_packet[64]  __attribute__ ((aligned (4)));
 unsigned char  Private_SB_tx_packet[48] __attribute__ ((aligned (4))) = {0x20,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
-unsigned char  Private_ESB_tx_packet[48] __attribute__ ((aligned (4))) = {0x21,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
+unsigned char  Private_TPLL_tx_packet[48] __attribute__ ((aligned (4))) = {0x21,0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
 
 #if(RF_AUTO_MODE == AUTO)
 
@@ -87,10 +87,10 @@ void user_init()
 
 	rf_set_acc_code(ACCESS_CODE);
 
-#if(PRIVATE_MODE == ESB_MODE)
+#if(PRIVATE_MODE == TPLL_MODE)
 
 #elif(PRIVATE_MODE == SB_MODE)
-	rf_pri_set_shockburst_len(RX_PAYLOAD_LEN);
+	rf_fix_payload_len_set(RX_PAYLOAD_LEN);
 #endif
 
 }
@@ -101,8 +101,8 @@ void main_loop (void)
 	while(1)
 	{
 		delay_ms(1);
-	#if(PRIVATE_MODE == ESB_MODE)
-		rf_start_stx (Private_ESB_tx_packet, get_sys_tick() + 16*1000*TX_INTERVAL_MS);
+	#if(PRIVATE_MODE == TPLL_MODE)
+		rf_start_stx (Private_TPLL_tx_packet, get_sys_tick() + 16*1000*TX_INTERVAL_MS);
 	#elif(PRIVATE_MODE == SB_MODE)
 		rf_start_stx (Private_SB_tx_packet, get_sys_tick() + 16*1000*TX_INTERVAL_MS);
 	#endif
@@ -120,10 +120,10 @@ void main_loop (void)
 	{
 		if(rf_is_rx_finish())
 		{
-		#if(PRIVATE_MODE == ESB_MODE)
-			if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
+		#if(PRIVATE_MODE == TPLL_MODE)
+			if(RF_TPLL_PACKET_CRC_OK(rx_packet)&&RF_TPLL_PACKET_LENGTH_OK(rx_packet))
 		#elif(PRIVATE_MODE == SB_MODE)
-			if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
+			if(RF_SB_PACKET_CRC_OK(rx_packet))
 		#endif
 			{
 				gpio_toggle(LED1);
@@ -153,10 +153,10 @@ void user_init()
 
 	rf_set_acc_code(ACCESS_CODE);
 
-#if(PRIVATE_MODE == ESB_MODE)
+#if(PRIVATE_MODE == TPLL_MODE)
 
 #elif(PRIVATE_MODE == SB_MODE)
-	rf_pri_set_shockburst_len(RX_PAYLOAD_LEN);
+	rf_fix_payload_len_set(RX_PAYLOAD_LEN);
 #endif
 
 }
@@ -168,8 +168,8 @@ void main_loop (void)
 	while(1)
 	{
 		delay_ms(1);
-	#if(PRIVATE_MODE == ESB_MODE)
-		rf_tx_pkt (Private_ESB_tx_packet);
+	#if(PRIVATE_MODE == TPLL_MODE)
+		rf_tx_pkt (Private_TPLL_tx_packet);
 	#elif(PRIVATE_MODE == SB_MODE)
 		rf_tx_pkt (Private_SB_tx_packet);
 	#endif
@@ -187,10 +187,10 @@ void main_loop (void)
 	{
 		if(rf_is_rx_finish())
 		{
-		#if(PRIVATE_MODE == ESB_MODE)
-			if(RF_NRF_ESB_PACKET_CRC_OK(rx_packet)&&RF_NRF_ESB_PACKET_LENGTH_OK(rx_packet))
+		#if(PRIVATE_MODE == TPLL_MODE)
+			if(RF_TPLL_PACKET_CRC_OK(rx_packet)&&RF_TPLL_PACKET_LENGTH_OK(rx_packet))
 		#elif(PRIVATE_MODE == SB_MODE)
-			if(RF_NRF_SB_PACKET_CRC_OK(rx_packet))
+			if(RF_SB_PACKET_CRC_OK(rx_packet))
 		#endif
 			{
 				gpio_toggle(LED1);

@@ -1,4 +1,57 @@
-﻿### Version：V1.4.0
+﻿### Version：V1.4.1
+* SDK version : telink_hawk_driver_sdk v1.4.1.
+* This version sdk support hawk.
+
+### BREAKING CHANGES
+
+* N/A
+
+### Bug Fixes
+
+* N/A
+
+### Features
+
+* N/A
+
+### Refactoring
+
+* **rf**
+  * Normalizes the naming of content related to private schemas
+  
+### Performance Improvements
+
+* N/A
+
+<hr style="border-bottom:2.5px solid rgb(146, 240, 161)">
+
+### 版本
+
+* SDK版本: telink_hawk_driver_sdk v1.4.1。
+* 此版本SDK支持hawk芯片。
+
+### BREAKING CHANGES
+
+* N/A
+
+### Bug Fixes
+
+* N/A
+
+### Features
+
+* N/A
+
+### Refactoring
+
+* **rf**
+  *规范化与私有模式相关内容的命名
+
+### Performance Improvements
+
+* N/A
+
+### Version：V1.4.0
 * SDK version : telink_hawk_driver_sdk v1.4.0.
 * This version sdk support hawk.
 
